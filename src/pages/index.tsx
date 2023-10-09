@@ -3,20 +3,24 @@ import Head from "next/head";
 import Link from "next/link";
 
 import { api } from "@/utils/api";
+import { useEffect } from "react";
+import Sidebar from "@/components/sidebar";
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
   // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-  if (
-    localStorage.theme === "dark" ||
-    (!("theme" in localStorage) &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-  localStorage.theme = "dark";
+  useEffect(() => {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.theme = "dark";
+  }, []);
   // localStorage.theme = "light";
   // localStorage.removeItem("theme");
 
@@ -28,16 +32,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <>
-        <div className="fixed left-0 top-0 h-screen w-[256px] border-r border-neutral-800 bg-neutral-800/50 px-8 py-16">
-          <div className="grid grid-flow-row gap-y-3">
-            <button className="w-full rounded-md border border-neutral-800 bg-neutral-800 px-4 py-2 text-start  shadow-sm">
-              Development
-            </button>
-            <button className="w-full rounded-md px-4 py-2 text-start text-neutral-500 shadow-sm transition-all hover:text-neutral-50">
-              Development
-            </button>
-          </div>
-        </div>
+        <Sidebar />
       </>
     </>
   );
