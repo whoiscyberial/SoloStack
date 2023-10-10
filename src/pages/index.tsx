@@ -7,8 +7,7 @@ import { useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+  const { data: sessionData } = useSession();
   useEffect(() => {
     if (
       localStorage.theme === "dark" ||

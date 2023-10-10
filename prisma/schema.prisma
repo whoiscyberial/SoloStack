@@ -12,26 +12,29 @@ datasource db {
 }
 
 model Post {
-  id       Int    @id @default(autoincrement())
-  title    String
-  text     String
-  authorId String
-  author   User   @relation("author", fields: [authorId], references: [id])
+  id        Int      @id @default(autoincrement())
+  title     String
+  text      String
+  authorId  String
+  author    User     @relation("author", fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
 
   @@index([title, text])
 }
 
 model Tool {
-  id            Int         @id @default(autoincrement())
-  title         String
-  description   String
-  text          String
-  link          String
-  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
-  subcategoryId Int
-  creatorId     String
-  creator       User        @relation("creator", fields: [creatorId], references: [id])
-  favorites     User[]      @relation("favoriteTools")
+  id             Int         @id @default(autoincrement())
+  title          String
+  description    String
+  text           String
+  link           String
+  subcategory    Subcategory @relation(fields: [subcategoryId], references: [id])
+  subcategoryId  Int
+  creatorId      String
+  creator        User        @relation("creator", fields: [creatorId], references: [id])
+  favorites      User[]      @relation("favoriteTools")
+  favoritesCount Int         @default(0)
+  createdAt      DateTime    @default(now())
 
   @@index([title, description])
 }
