@@ -14,7 +14,7 @@ type sortBy = {};
 export const categoryRouter = createTRPCRouter({
   // CATEGORY
 
-  create: adminProcedure.input(Category).query(({ ctx, input }) => {
+  create: adminProcedure.input(Category).mutation(({ ctx, input }) => {
     return ctx.db.category.create({ data: input });
   }),
 
@@ -28,13 +28,13 @@ export const categoryRouter = createTRPCRouter({
 
   update: adminProcedure
     .input(Category.extend({ id: z.number() }))
-    .query(({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.db.category.update({ where: { id: input.id }, data: input });
     }),
 
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
-    .query(({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.db.category.delete({ where: { id: input.id } });
     }),
 });

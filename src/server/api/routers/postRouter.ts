@@ -34,7 +34,7 @@ export const postRouter = createTRPCRouter({
 
   delete: adminProcedure
     .input(z.object({ postId: z.number() }))
-    .query(({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.db.post.delete({ where: { id: input.postId } });
     }),
 });

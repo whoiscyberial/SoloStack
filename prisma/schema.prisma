@@ -26,7 +26,7 @@ model Tool {
   id             Int         @id @default(autoincrement())
   title          String
   description    String
-  text           String
+  text           String?
   link           String
   subcategory    Subcategory @relation(fields: [subcategoryId], references: [id])
   subcategoryId  Int

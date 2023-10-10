@@ -1,6 +1,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import notification from "@/components/notification";
 
 import { api } from "@/utils/api";
 import { useEffect } from "react";

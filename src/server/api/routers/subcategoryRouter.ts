@@ -12,7 +12,7 @@ const Subcategory = z.object({ title: z.string(), categoryId: z.number() });
 export const subcategoryRouter = createTRPCRouter({
   // CATEGORY
 
-  create: adminProcedure.input(Subcategory).query(({ ctx, input }) => {
+  create: adminProcedure.input(Subcategory).mutation(({ ctx, input }) => {
     return ctx.db.subcategory.create({ data: input });
   }),
 
@@ -24,7 +24,7 @@ export const subcategoryRouter = createTRPCRouter({
 
   update: adminProcedure
     .input(Subcategory.extend({ id: z.number() }))
-    .query(({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.db.subcategory.update({
         where: { id: input.id },
         data: input,
@@ -33,7 +33,7 @@ export const subcategoryRouter = createTRPCRouter({
 
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
-    .query(({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.db.subcategory.delete({ where: { id: input.id } });
     }),
 });
