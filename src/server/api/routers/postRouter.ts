@@ -10,7 +10,7 @@ import {
 type sortBy = {};
 
 export const postRouter = createTRPCRouter({
-  getPosts: publicProcedure
+  getAll: publicProcedure
     .input(z.object({ sort: z.enum(["newestFirst"]) }))
     .query(({ ctx, input }) => {
       if (input.sort === "newestFirst") {
@@ -26,13 +26,13 @@ export const postRouter = createTRPCRouter({
       // else if (input.sort === ...)
     }),
 
-  getPost: publicProcedure
+  getById: publicProcedure
     .input(z.object({ postId: z.number() }))
     .query(({ ctx, input }) => {
       return ctx.db.post.findUnique({ where: { id: input.postId } });
     }),
 
-  deletePost: adminProcedure
+  delete: adminProcedure
     .input(z.object({ postId: z.number() }))
     .query(({ ctx, input }) => {
       return ctx.db.post.delete({ where: { id: input.postId } });

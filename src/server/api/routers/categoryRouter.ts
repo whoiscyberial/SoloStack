@@ -1,0 +1,40 @@
+import { z } from "zod";
+
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+  adminProcedure,
+} from "@/server/api/trpc";
+
+const Category = z.object({ title: z.string() });
+
+type sortBy = {};
+
+export const categoryRouter = createTRPCRouter({
+  // CATEGORY
+
+  create: adminProcedure.input(Category).query(({ ctx, input }) => {
+    return ctx.db.category.create({ data: input });
+  }),
+
+  getAll: publicProcedure.query(({ ctx }) => {
+    return ctx.db.category.findMany({
+      include: {
+        subcategories: true,
+      },
+    });
+  }),
+
+  update: adminProcedure
+    .input(Category.extend({ id: z.number() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.category.update({ where: { id: input.id }, data: input });
+    }),
+
+  delete: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.category.delete({ where: { id: input.id } });
+    }),
+});
