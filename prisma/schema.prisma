@@ -11,10 +11,21 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Post {
+  id       Int    @id @default(autoincrement())
+  title    String
+  text     String
+  authorId String
+  author   User   @relation("author", fields: [authorId], references: [id])
+
+  @@index([title, text])
+}
+
 model Tool {
   id            Int         @id @default(autoincrement())
   title         String
   description   String
+  text          String
   link          String
   subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
   subcategoryId Int
@@ -22,7 +33,7 @@ model Tool {
   creator       User        @relation("creator", fields: [creatorId], references: [id])
   favorites     User[]      @relation("favoriteTools")
 
-  @@index([title])
+  @@index([title, description])
 }
 
 model Category {
@@ -41,6 +52,12 @@ model Subcategory {
 
 // Next auth
 
+enum Role {
+  FREE_USER
+  PAID_USER
+  ADMIN
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -49,24 +66,27 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  posts         Post[]    @relation("author")
   tools         Tool[]    @relation("creator")
   favoriteTools Tool[]    @relation("favoriteTools")
+  role          Role      @default(FREE_USER)
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? // @db.Text
-  access_token      String? // @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? // @db.Text
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? // @db.Text
+  access_token             String? // @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? // @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }

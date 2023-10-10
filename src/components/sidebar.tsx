@@ -1,4 +1,5 @@
 import React from "react";
+import LoginButton from "@/components/LoginButton";
 
 const Sidebar = () => {
   return (
@@ -32,6 +33,7 @@ const Sidebar = () => {
             Video editing
           </button>
         </div>
+        <LoginButton />
       </div>
     </div>
   );
