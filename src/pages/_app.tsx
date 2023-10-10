@@ -4,6 +4,7 @@ import { type AppType } from "next/app";
 import { Inter } from "next/font/google";
 
 import { api } from "@/utils/api";
+import { useTheme } from "@/utils/useTheme";
 
 import "@/styles/globals.css";
 
@@ -13,6 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  useTheme();
   return (
     <SessionProvider session={session}>
       <main

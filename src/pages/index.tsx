@@ -8,18 +8,6 @@ import Sidebar from "@/components/Sidebar";
 
 export default function Home() {
   const { data: sessionData } = useSession();
-  useEffect(() => {
-    if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.theme = "dark";
-  }, []);
   // localStorage.theme = "light";
   // localStorage.removeItem("theme");
 
