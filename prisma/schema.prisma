@@ -49,9 +49,12 @@ model Category {
 model Subcategory {
   id         Int      @id @default(autoincrement())
   title      String
+  slug       String   @unique
   tools      Tool[]
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
+
+  @@index([slug])
 }
 
 // Next auth

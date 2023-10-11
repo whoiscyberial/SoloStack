@@ -7,7 +7,11 @@ import {
   adminProcedure,
 } from "@/server/api/trpc";
 
-const Subcategory = z.object({ title: z.string(), categoryId: z.number() });
+const Subcategory = z.object({
+  title: z.string(),
+  categoryId: z.number(),
+  slug: z.string(),
+});
 
 export const subcategoryRouter = createTRPCRouter({
   // CATEGORY

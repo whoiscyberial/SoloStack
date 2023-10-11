@@ -44,14 +44,18 @@ export const toolRouter = createTRPCRouter({
     )
     .query(({ ctx, input }) => {
       return ctx.db.tool.findMany({
-        select: {
-          title: true,
-          description: true,
-          favorites: true,
-          id: true,
-          verified: true,
-          subcategory: { select: { title: true } },
+        include: {
+          subcategory: {
+            select: {
+              category: {
+                select: { title: true },
+              },
+              title: true,
+              slug: true,
+            },
+          },
         },
+
         ...(input.sort === "newestFirst"
           ? {
               orderBy: {
@@ -88,6 +92,17 @@ export const toolRouter = createTRPCRouter({
       return ctx.db.tool.findMany({
         where: {
           subcategoryId: input.subcategoryId,
+        },
+        include: {
+          subcategory: {
+            select: {
+              category: {
+                select: { title: true },
+              },
+              title: true,
+              slug: true,
+            },
+          },
         },
         ...(input.sort === "newestFirst"
           ? {

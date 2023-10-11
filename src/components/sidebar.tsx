@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import LoginButton from "@/components/LoginButton";
-import Button from "./Button";
+import Button from "./ui/Button";
 import ToolForm from "./ToolForm";
 import ToolFormButton from "./ToolFormButton";
 import { api } from "@/utils/api";
-import LoadingOverlay from "./LoadingOverlay";
+import LoadingOverlay from "./ui/LoadingOverlay";
 import { motion } from "framer-motion";
 
 const Sidebar = () => {
@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   if (!categories.data || categories.isLoading) {
     return (
-      <div className="fixed left-0 top-0 h-screen w-[256px] border-r border-neutral-800 bg-neutral-800/50 px-8 py-16"></div>
+      <div className="absolute left-0 top-0 h-screen w-[256px] border-r border-neutral-800 bg-neutral-800/50 px-8 py-16"></div>
     );
   }
 
@@ -68,7 +68,7 @@ const Sidebar = () => {
             <ToolFormButton categories={categories.data} className="text-left">
               Add your tool
             </ToolFormButton>
-            <LoginButton />
+            <LoginButton className="text-start" />
           </motion.div>
         </div>
       </div>
