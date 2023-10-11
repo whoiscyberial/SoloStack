@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Button from "@/components/ui/Button";
@@ -6,7 +6,6 @@ import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import notification from "./ui/notification";
-import { useDetectClickOutside } from "react-detect-click-outside";
 import LoadingOverlay from "./ui/LoadingOverlay";
 import { Category, Subcategory } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";

@@ -4,7 +4,6 @@ import React from "react";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import Button from "./ui/Button";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 type ToolPage = {
   subcategorySlug: string;

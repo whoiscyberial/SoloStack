@@ -3,14 +3,12 @@ import ToolPage from "@/components/ToolPage";
 import ToolsList from "@/components/ToolsList";
 import Container from "@/components/ui/Container";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
-import { TRPCError } from "@trpc/server";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 
 export default function Subcategory() {
   const router = useRouter();
 
-  let { subcategory } = router.query;
+  const { subcategory } = router.query;
   if (!subcategory) {
     return <LoadingOverlay />;
   } else if (
@@ -18,8 +16,8 @@ export default function Subcategory() {
     subcategory.length === 2 &&
     typeof subcategory[1] != undefined
   ) {
-    const slug = subcategory[0] as string;
-    const toolId = subcategory[1] as string;
+    const slug = subcategory[0]!;
+    const toolId = subcategory[1]!;
     return (
       <>
         <Sidebar />

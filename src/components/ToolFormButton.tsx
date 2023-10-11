@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ToolForm from "./ToolForm";
 import Button from "./ui/Button";
-import { Category, Subcategory } from "@prisma/client";
+import { type Category, type Subcategory } from "@prisma/client";
 
 const ToolFormButton = ({
   children,
@@ -21,6 +21,7 @@ const ToolFormButton = ({
         show={toolFormActive}
       />
       <Button
+        {...props}
         className={className}
         onClick={() => {
           setToolFormActive(!toolFormActive);

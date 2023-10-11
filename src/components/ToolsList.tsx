@@ -1,9 +1,8 @@
 import { api } from "@/utils/api";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import Link from "next/link";
 import { z } from "zod";
-import { Tool } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 
 const ToolsListPropsZod = z.object({

@@ -1,9 +1,6 @@
-import { api } from "@/utils/api";
 import { signIn, signOut, useSession } from "next-auth/react";
 import React from "react";
 import Button from "./ui/Button";
-
-type LoginButtonProps = {};
 
 const LoginButton = ({
   className,

@@ -25,7 +25,7 @@ export const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
 export const toolRouter = createTRPCRouter({
   // TOOL
 
-  create: publicProcedure.input(Tool).mutation(({ ctx, input }) => {
+  create: protectedProcedure.input(Tool).mutation(({ ctx, input }) => {
     return ctx.db.tool.create({ data: input });
   }),
 

@@ -2,14 +2,11 @@ import { z } from "zod";
 
 import {
   createTRPCRouter,
-  protectedProcedure,
   publicProcedure,
   adminProcedure,
 } from "@/server/api/trpc";
 
 const Category = z.object({ title: z.string() });
-
-type sortBy = {};
 
 export const categoryRouter = createTRPCRouter({
   // CATEGORY
