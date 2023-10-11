@@ -21,9 +21,7 @@ export default function Home() {
       </Head>
       <>
         <Sidebar />
-        <Container>
-          <ToolsList subcategoryId={1} />
-        </Container>
+        <Container></Container>
       </>
     </>
   );

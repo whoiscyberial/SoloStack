@@ -218,7 +218,6 @@ const ToolForm = ({
               >
                 Add tool
               </Button>
-              {isSubmitting && <p>Submitting tool...</p>}
             </div>
           </form>
         </motion.div>

@@ -20,7 +20,7 @@ const Tool = z.object({
   verified: z.boolean().default(false),
 });
 
-const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
+export const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
 
 export const toolRouter = createTRPCRouter({
   // TOOL
@@ -30,9 +30,9 @@ export const toolRouter = createTRPCRouter({
   }),
 
   getById: publicProcedure
-    .input(z.object({ toolId: z.number() }))
+    .input(z.object({ id: z.number() }))
     .query(({ ctx, input }) => {
-      return ctx.db.tool.findUnique({ where: { id: input.toolId } });
+      return ctx.db.tool.findUnique({ where: { id: input.id } });
     }),
 
   getAll: publicProcedure
@@ -83,7 +83,8 @@ export const toolRouter = createTRPCRouter({
   getBySubcategory: publicProcedure
     .input(
       z.object({
-        subcategoryId: z.number(),
+        subcategoryId: z.number().optional(),
+        slug: z.string().optional(),
         sort: z.enum(TOOL_SORT_TYPES),
         verifiedOnly: z.boolean().default(false),
       }),
@@ -91,7 +92,18 @@ export const toolRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       return ctx.db.tool.findMany({
         where: {
-          subcategoryId: input.subcategoryId,
+          ...(input.slug
+            ? {
+                subcategory: {
+                  slug: input.slug,
+                },
+              }
+            : null),
+          ...(input.subcategoryId
+            ? {
+                subcategoryId: input.subcategoryId,
+              }
+            : null),
         },
         include: {
           subcategory: {
@@ -129,11 +141,11 @@ export const toolRouter = createTRPCRouter({
     }),
 
   delete: adminProcedure
-    .input(z.object({ toolId: z.number() }))
+    .input(z.object({ id: z.number() }))
     .mutation(({ ctx, input }) => {
       return ctx.db.tool.delete({
         where: {
-          id: input.toolId,
+          id: input.id,
         },
       });
     }),

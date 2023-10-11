@@ -6,6 +6,7 @@ import ToolFormButton from "./ToolFormButton";
 import { api } from "@/utils/api";
 import LoadingOverlay from "./ui/LoadingOverlay";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const Sidebar = () => {
   const categories = api.category.getAll.useQuery(undefined, {
@@ -26,6 +27,7 @@ const Sidebar = () => {
           {categories.data.map((category) => {
             return (
               <motion.div
+                key={category.id}
                 className="grid grid-flow-row gap-y-[6px]"
                 initial={{ translateX: -80, opacity: 0 }}
                 transition={{ delay: category.id / 4 - 0.25, duration: 0.6 }}
@@ -39,7 +41,9 @@ const Sidebar = () => {
                     // <button className="w-full rounded-md bg-neutral-800 px-4 py-2 text-start  shadow-sm">
                     //   {subcategory.title}
                     // </button>
-                    <button
+                    <Link
+                      href={`/${subcategory.slug}`}
+                      key={subcategory.id}
                       onClick={() => {
                         setActiveSubcategory(subcategory.id);
                       }}
@@ -50,7 +54,7 @@ const Sidebar = () => {
                       }`}
                     >
                       {subcategory.title}
-                    </button>
+                    </Link>
                   );
                 })}
               </motion.div>
