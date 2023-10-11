@@ -20,7 +20,7 @@ const validationSchema = z.object({
   text: z.string().optional(),
   subcategoryId: z.string().min(1, { message: "Please choose a Subcategory" }),
   link: z.string().url({ message: "Please provide a full link to tool" }),
-  verified: z.boolean(),
+  verified: z.boolean().optional(),
 });
 type ValidationSchema = z.infer<typeof validationSchema>;
 
