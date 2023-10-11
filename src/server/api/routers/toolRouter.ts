@@ -17,6 +17,7 @@ const Tool = z.object({
   subcategoryId: z.number().min(1, { message: "Please choose a Subcategory" }),
   link: z.string().url({ message: "Please provide a full link to tool" }),
   creatorId: z.string(),
+  verified: z.boolean().default(false),
 });
 
 const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
@@ -38,36 +39,41 @@ export const toolRouter = createTRPCRouter({
     .input(
       z.object({
         sort: z.enum(TOOL_SORT_TYPES),
+        verifiedOnly: z.boolean().default(false),
       }),
     )
     .query(({ ctx, input }) => {
-      if (input.sort === "newestFirst") {
-        return ctx.db.tool.findMany({
-          select: {
-            title: true,
-            description: true,
-            favorites: true,
-            id: true,
-            subcategory: { select: { title: true } },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        });
-      } else if (input.sort === "mostLikedFirst") {
-        return ctx.db.tool.findMany({
-          select: {
-            title: true,
-            description: true,
-            favorites: true,
-            id: true,
-            subcategory: { select: { title: true } },
-          },
-          orderBy: {
-            favoritesCount: "desc",
-          },
-        });
-      }
+      return ctx.db.tool.findMany({
+        select: {
+          title: true,
+          description: true,
+          favorites: true,
+          id: true,
+          verified: true,
+          subcategory: { select: { title: true } },
+        },
+        ...(input.sort === "newestFirst"
+          ? {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }
+          : null),
+        ...(input.sort === "mostLikedFirst"
+          ? {
+              orderBy: {
+                favoritesCount: "desc",
+              },
+            }
+          : null),
+        ...(input.verifiedOnly === true
+          ? {
+              where: {
+                verified: true,
+              },
+            }
+          : null),
+      });
     }),
 
   getBySubcategory: publicProcedure
@@ -75,28 +81,36 @@ export const toolRouter = createTRPCRouter({
       z.object({
         subcategoryId: z.number(),
         sort: z.enum(TOOL_SORT_TYPES),
+        verifiedOnly: z.boolean().default(false),
       }),
     )
     .query(({ ctx, input }) => {
-      if (input.sort === "newestFirst") {
-        return ctx.db.tool.findMany({
-          where: {
-            subcategoryId: input.subcategoryId,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        });
-      } else if (input.sort === "mostLikedFirst") {
-        return ctx.db.tool.findMany({
-          where: {
-            subcategoryId: input.subcategoryId,
-          },
-          orderBy: {
-            favoritesCount: "desc",
-          },
-        });
-      }
+      return ctx.db.tool.findMany({
+        where: {
+          subcategoryId: input.subcategoryId,
+        },
+        ...(input.sort === "newestFirst"
+          ? {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }
+          : null),
+        ...(input.sort === "mostLikedFirst"
+          ? {
+              orderBy: {
+                favoritesCount: "desc",
+              },
+            }
+          : null),
+        ...(input.verifiedOnly === true
+          ? {
+              where: {
+                verified: true,
+              },
+            }
+          : null),
+      });
     }),
 
   delete: adminProcedure

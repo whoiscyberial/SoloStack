@@ -16,6 +16,7 @@ const validationSchema = z.object({
   text: z.string().optional(),
   subcategoryId: z.string().min(1, { message: "Please choose a Subcategory" }),
   link: z.string().url({ message: "Please provide a full link to tool" }),
+  verified: z.boolean(),
 });
 type ValidationSchema = z.infer<typeof validationSchema>;
 
@@ -63,6 +64,11 @@ const ToolForm = () => {
   }
 
   const onSubmit: SubmitHandler<ValidationSchema> = (data) => {
+    if (sessionData.user.role === "ADMIN") {
+      data.verified = true;
+    } else {
+      data.verified = false;
+    }
     createTool.mutate({
       title: data.title,
       description: data.description,
@@ -70,6 +76,7 @@ const ToolForm = () => {
       link: data.link,
       subcategoryId: parseInt(data.subcategoryId),
       creatorId: sessionData.user.id,
+      verified: data.verified,
     });
   };
 

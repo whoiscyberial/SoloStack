@@ -35,6 +35,7 @@ model Tool {
   favorites      User[]      @relation("favoriteTools")
   favoritesCount Int         @default(0)
   createdAt      DateTime    @default(now())
+  verified       Boolean     @default(false)
 
   @@index([title, description])
 }
