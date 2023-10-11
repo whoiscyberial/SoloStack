@@ -14,13 +14,12 @@ const ToolFormButton = ({
   const [toolFormActive, setToolFormActive] = useState(false);
 
   return (
-    <>
-      {toolFormActive === true && (
-        <ToolForm
-          close={() => setToolFormActive(!toolFormActive)}
-          categories={categories}
-        />
-      )}
+    <div className="grid grid-flow-col gap-0 transition-all">
+      <ToolForm
+        close={() => setToolFormActive(!toolFormActive)}
+        categories={categories}
+        show={toolFormActive}
+      />
       <Button
         className={className}
         onClick={() => {
@@ -29,7 +28,7 @@ const ToolFormButton = ({
       >
         {children}
       </Button>
-    </>
+    </div>
   );
 };
 
