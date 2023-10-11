@@ -13,11 +13,7 @@ const Admin = () => {
   } else if (sessionData === null) {
     throw new TRPCError({ code: "FORBIDDEN" });
   } else {
-    return (
-      <div>
-        <ToolForm />
-      </div>
-    );
+    return <div></div>;
   }
 };
 

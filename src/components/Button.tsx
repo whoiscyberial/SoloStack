@@ -41,7 +41,7 @@ const Button = ({
   return (
     <button
       {...props}
-      className={`${className} flex items-center justify-center rounded-md border px-4 py-2 text-center text-neutral-500 shadow-sm transition-all dark:border-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200`}
+      className={`${className} rounded-md border px-4 py-2  text-neutral-500 shadow-sm transition-all dark:border-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200`}
     >
       {children}
     </button>
