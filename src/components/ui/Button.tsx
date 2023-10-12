@@ -16,7 +16,7 @@ const Button = ({
       <Link href={href}>
         <button
           {...props}
-          className={`${className} flex w-full items-center justify-between rounded-md border px-4 py-2 text-center text-neutral-500 shadow-sm transition-all dark:border-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200`}
+          className={`${className} flex w-full items-center justify-between rounded-md border px-4 py-2 text-center text-neutral-500 shadow-sm transition-all dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200`}
         >
           {children}
           <svg

@@ -43,23 +43,25 @@ const ToolsList = ({
   }
 
   return (
-    <AnimatePresence>
-      <h2 className="mb-4 block">{tools.data[0]?.subcategory.title}</h2>
+    <div className="flex w-full max-w-[1280px] flex-col items-center justify-center">
+      <h2 className="mb-8 w-full">{tools.data[0]?.subcategory.title}</h2>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="grid w-full max-w-[1280px] grid-cols-1 gap-x-2 gap-y-4 lg:grid-cols-2 xl:grid-cols-3"
+        className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  lg:grid-cols-2 xl:grid-cols-3 ${
+          isMobile ? "" : "gap-y-4"
+        }`}
       >
         {tools.data.map((tool) => {
           return (
             <Link
               key={tool.id}
               href={`/${tool.subcategory.slug}/${tool.id}`}
-              className={`flex w-full flex-col items-start justify-center gap-1  px-4 py-2 text-start transition-all hover:bg-neutral-800 ${
+              className={`flex w-full flex-col items-start justify-center gap-1  px-4 text-start transition-all hover:bg-neutral-800 ${
                 isMobile
-                  ? "-mt-4 border-b border-neutral-800"
-                  : "rounded-md border-b border-transparent"
+                  ? "border-b border-neutral-800 py-3"
+                  : "rounded-md border-b border-transparent py-2 "
               }`}
             >
               <h3>{tool.title}</h3>
@@ -71,7 +73,7 @@ const ToolsList = ({
           );
         })}
       </motion.div>
-    </AnimatePresence>
+    </div>
   );
 };
 

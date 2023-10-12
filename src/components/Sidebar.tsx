@@ -14,9 +14,9 @@ const Sidebar = () => {
   });
   const [activeSubcategory, setActiveSubcategory] = useState(-1);
   const isMobile = useMobile();
-  const [showSidebar, setShowSidebar] = useState(isMobile === true);
+  const [showSidebar, setShowSidebar] = useState(false);
   useEffect(() => {
-    setShowSidebar(isMobile === true);
+    setShowSidebar(isMobile === false);
   }, [isMobile]);
 
   if (!categories.data || categories.isLoading) {
@@ -28,37 +28,40 @@ const Sidebar = () => {
   return (
     <>
       {showSidebar === false && isMobile === true && (
-        <Button
-          className="absolute right-4 top-4 px-[10px] py-[10px]"
-          onClick={() => {
-            setShowSidebar(true);
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
+        <div className="sticky right-0 top-0 w-full ">
+          <Button
+            className=" absolute right-4 top-4 px-[10px] py-[10px]"
+            onClick={() => {
+              setShowSidebar(true);
+            }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-            />
-          </svg>
-        </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+          </Button>
+        </div>
       )}
       <AnimatePresence>
-        {(showSidebar === true || isMobile === false) && (
+        {showSidebar === true && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className=""
           >
             <div
-              className={`bg-neutral-850 absolute left-0 top-0 z-10 h-screen w-[256px] overflow-y-scroll border-r border-neutral-800 px-8 py-14`}
+              className={`bg-neutral-850 fixed left-0 top-0 z-10 h-full min-h-full  w-[256px] overflow-y-scroll border-r border-neutral-800 px-8 py-14`}
             >
               <div className="grid grid-flow-row gap-y-16">
                 {categories.data.map((category) => {
@@ -68,7 +71,7 @@ const Sidebar = () => {
                       className="grid grid-flow-row gap-y-[6px]"
                       initial={{ translateX: -80, opacity: 0 }}
                       transition={{
-                        delay: category.id / 4 - 0.25,
+                        delay: category.id / 5 - 0.25,
                         duration: 0.6,
                       }}
                       animate={{ translateX: 0, opacity: 1 }}
@@ -107,7 +110,7 @@ const Sidebar = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{
-                    delay: categories.data.length / 4 + 0.6,
+                    delay: categories.data.length / 5 + 0.4,
                     duration: 0.6,
                   }}
                   className="grid grid-flow-row gap-y-4"
