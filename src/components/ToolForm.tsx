@@ -53,7 +53,7 @@ const ToolForm = ({
 
   // No hooks after this line
   if (!sessionData || !categories) {
-    return <LoadingOverlay />;
+    return <>{show && <LoadingOverlay />}</>;
   }
 
   const onSubmit: SubmitHandler<ValidationSchema> = (data) => {
