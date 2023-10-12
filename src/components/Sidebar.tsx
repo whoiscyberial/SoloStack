@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import LoginButton from "@/components/LoginButton";
 import ToolFormButton from "./ToolFormButton";
-import { api } from "@/utils/api";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useWindowSize } from "@uidotdev/usehooks";
 import Button from "./ui/Button";
 import useMobile from "@/utils/useMobile";
 import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";

@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 import { useContext, useEffect } from "react";
 import notification from "./ui/notification";
 import LoadingOverlay from "./ui/LoadingOverlay";
-import { Category, Subcategory } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
 
@@ -34,7 +33,7 @@ const ToolForm = () => {
     resolver: zodResolver(validationSchema),
   });
 
-  const { state, setState } = useContext(CategoriesAndToolFormContext);
+  const { state } = useContext(CategoriesAndToolFormContext);
   const { categories, show, close } = state;
   const createTool = api.tool.create.useMutation();
   const { data: sessionData } = useSession();

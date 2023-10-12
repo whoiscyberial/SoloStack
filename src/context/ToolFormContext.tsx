@@ -1,18 +1,6 @@
-import ToolForm from "@/components/ToolForm";
-import Button from "@/components/ui/Button";
-import LoadingOverlay from "@/components/ui/LoadingOverlay";
-import notification from "@/components/ui/notification";
 import { api } from "@/utils/api";
-import { Category, Subcategory } from "@prisma/client";
-import { useSession } from "next-auth/react";
-import {
-  Context,
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { type Category, type Subcategory } from "@prisma/client";
+import { PropsWithChildren, createContext, useEffect, useState } from "react";
 
 type Props = {
   close: () => void;

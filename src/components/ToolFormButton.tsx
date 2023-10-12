@@ -1,7 +1,5 @@
-import React, { PropsWithChildren, useContext, useState } from "react";
-import ToolForm from "./ToolForm";
+import React, { type PropsWithChildren, useContext } from "react";
 import Button from "./ui/Button";
-import { type Category, type Subcategory } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import notification from "./ui/notification";
 import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";

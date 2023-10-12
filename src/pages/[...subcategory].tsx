@@ -1,4 +1,3 @@
-import Sidebar from "@/components/Sidebar";
 import ToolPage from "@/components/ToolPage";
 import ToolsList from "@/components/ToolsList";
 import Container from "@/components/ui/Container";

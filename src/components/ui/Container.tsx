@@ -1,6 +1,5 @@
 import React from "react";
 import Sidebar from "../Sidebar";
-import { api } from "@/utils/api";
 
 const Container = ({
   children,
