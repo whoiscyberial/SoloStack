@@ -1,6 +1,6 @@
 import { api } from "@/utils/api";
 import { type Category, type Subcategory } from "@prisma/client";
-import { PropsWithChildren, createContext, useEffect, useState } from "react";
+import { type PropsWithChildren, createContext, useEffect, useState } from "react";
 
 type Props = {
   close: () => void;
