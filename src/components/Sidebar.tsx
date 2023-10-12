@@ -115,8 +115,10 @@ const Sidebar = () => {
                   }}
                   className="grid grid-flow-row gap-y-4"
                 >
-                  <ToolFormButton>Add your tool</ToolFormButton>
-                  <LoginButton className="text-start" />
+                  <ToolFormButton className="text-left">
+                    Add your tool
+                  </ToolFormButton>
+                  <LoginButton className="text-left" />
                 </motion.div>
               </div>
             </div>
