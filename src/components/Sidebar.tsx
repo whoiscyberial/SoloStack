@@ -61,14 +61,14 @@ const Sidebar = () => {
             className=""
           >
             <div
-              className={`bg-neutral-850 fixed left-0 top-0 z-10 h-full min-h-full  w-[256px] overflow-y-scroll border-r border-neutral-800 px-8 py-14`}
+              className={`bg-neutral-850 fixed left-0 top-0 z-10 h-full min-h-full  w-[256px] overflow-y-auto border-r border-neutral-800 px-8 py-14`}
             >
-              <div className="grid grid-flow-row gap-y-16">
+              <div className="grid grid-flow-row gap-y-14">
                 {categories.map((category) => {
                   return (
                     <motion.div
                       key={category.id}
-                      className="grid grid-flow-row gap-y-[6px]"
+                      className="grid grid-flow-row gap-y-[4px]"
                       initial={{ translateX: -80, opacity: 0 }}
                       transition={{
                         delay: category.id / 5 - 0.25,
