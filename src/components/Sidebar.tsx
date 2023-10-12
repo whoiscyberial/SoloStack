@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LoginButton from "@/components/LoginButton";
 import ToolFormButton from "./ToolFormButton";
 import { api } from "@/utils/api";
@@ -7,11 +7,11 @@ import Link from "next/link";
 import { useWindowSize } from "@uidotdev/usehooks";
 import Button from "./ui/Button";
 import useMobile from "@/utils/useMobile";
+import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
 
 const Sidebar = () => {
-  const categories = api.category.getAll.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-  });
+  const { state } = useContext(CategoriesAndToolFormContext);
+  const { categories } = state;
   const [activeSubcategory, setActiveSubcategory] = useState(-1);
   const isMobile = useMobile();
   const [showSidebar, setShowSidebar] = useState(false);
@@ -19,7 +19,7 @@ const Sidebar = () => {
     setShowSidebar(isMobile === false);
   }, [isMobile]);
 
-  if (!categories.data || categories.isLoading) {
+  if (!categories) {
     return (
       <div className="absolute left-0 top-0 h-screen w-[256px] border-r border-neutral-800 bg-neutral-800/50 px-8 py-16"></div>
     );
@@ -64,7 +64,7 @@ const Sidebar = () => {
               className={`bg-neutral-850 fixed left-0 top-0 z-10 h-full min-h-full  w-[256px] overflow-y-scroll border-r border-neutral-800 px-8 py-14`}
             >
               <div className="grid grid-flow-row gap-y-16">
-                {categories.data.map((category) => {
+                {categories.map((category) => {
                   return (
                     <motion.div
                       key={category.id}
@@ -110,17 +110,12 @@ const Sidebar = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{
-                    delay: categories.data.length / 5 + 0.4,
+                    delay: categories.length / 5 + 0.4,
                     duration: 0.6,
                   }}
                   className="grid grid-flow-row gap-y-4"
                 >
-                  <ToolFormButton
-                    categories={categories.data}
-                    className="text-left"
-                  >
-                    Add your tool
-                  </ToolFormButton>
+                  <ToolFormButton>Add your tool</ToolFormButton>
                   <LoginButton className="text-start" />
                 </motion.div>
               </div>

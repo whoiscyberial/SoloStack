@@ -4,11 +4,12 @@ import { z } from "zod";
 import Button from "@/components/ui/Button";
 import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import notification from "./ui/notification";
 import LoadingOverlay from "./ui/LoadingOverlay";
 import { Category, Subcategory } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
+import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
 
 const validationSchema = z.object({
   title: z.string().min(3, { message: "Title is required" }),
@@ -23,15 +24,7 @@ const validationSchema = z.object({
 });
 type ValidationSchema = z.infer<typeof validationSchema>;
 
-const ToolForm = ({
-  close,
-  categories,
-  show,
-}: {
-  close: () => void;
-  categories: Array<Category & { subcategories: Array<Subcategory> }>;
-  show: boolean;
-}) => {
+const ToolForm = () => {
   const {
     register,
     handleSubmit,
@@ -41,6 +34,8 @@ const ToolForm = ({
     resolver: zodResolver(validationSchema),
   });
 
+  const { state, setState } = useContext(CategoriesAndToolFormContext);
+  const { categories, show, close } = state;
   const createTool = api.tool.create.useMutation();
   const { data: sessionData } = useSession();
   useEffect(() => {
@@ -52,7 +47,8 @@ const ToolForm = ({
   }, [isSubmitSuccessful, reset]);
 
   // No hooks after this line
-  if (!sessionData || !categories) {
+
+  if (!categories || !sessionData) {
     return <>{show && <LoadingOverlay />}</>;
   }
 

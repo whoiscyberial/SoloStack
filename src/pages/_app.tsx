@@ -8,6 +8,8 @@ import { api } from "@/utils/api";
 import { useTheme } from "@/utils/useTheme";
 
 import "@/styles/globals.css";
+import ToolFormAndCategoriesProvider from "@/context/ToolFormContext";
+import ToolForm from "@/components/ToolForm";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +23,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <main
         className={`${inter.className} flex min-h-screen w-screen flex-col items-center justify-center bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-200`}
       >
-        <Toaster position="bottom-left" reverseOrder={false} />
-        <Component {...pageProps} />
+        <ToolFormAndCategoriesProvider>
+          <Component {...pageProps} />
+          <Toaster position="bottom-left" reverseOrder={false} />
+          <ToolForm />
+        </ToolFormAndCategoriesProvider>
       </main>
     </SessionProvider>
   );

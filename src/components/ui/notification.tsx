@@ -21,12 +21,13 @@ const notification = (message: string) => {
     ),
     style: {
       borderRadius: "4px",
-      background: "rgba(1,1,1,0.4)",
+      background: "#1e1e1e",
       color: "rgba(255,255,255,0.8)",
       padding: "16px 48px 16px 48px",
       maxWidth: "640px",
     },
     duration: 4000,
+    position: "top-center",
   });
 };
 

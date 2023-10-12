@@ -19,21 +19,15 @@ export default function Subcategory() {
     const slug = subcategory[0]!;
     const toolId = subcategory[1]!;
     return (
-      <>
-        <Sidebar />
-        <Container>
-          <ToolPage subcategorySlug={slug} toolId={parseInt(toolId)} />
-        </Container>
-      </>
+      <Container>
+        <ToolPage subcategorySlug={slug} toolId={parseInt(toolId)} />
+      </Container>
     );
   } else if (subcategory.length === 1) {
     return (
-      <>
-        <Sidebar />
-        <Container>
-          <ToolsList sort="mostLikedFirst" subcategorySlug={subcategory[0]} />
-        </Container>
-      </>
+      <Container>
+        <ToolsList sort="mostLikedFirst" subcategorySlug={subcategory[0]} />
+      </Container>
     );
   }
 }

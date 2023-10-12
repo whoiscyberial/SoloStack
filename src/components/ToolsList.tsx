@@ -3,8 +3,9 @@ import React from "react";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import Link from "next/link";
 import { z } from "zod";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import useMobile from "@/utils/useMobile";
+import ToolFormButton from "./ToolFormButton";
 
 const ToolsListPropsZod = z.object({
   subcategoryId: z.number().optional(),
@@ -44,7 +45,9 @@ const ToolsList = ({
 
   return (
     <div className="flex w-full max-w-[1280px] flex-col items-center justify-center">
-      <h2 className="mb-8 w-full">{tools.data[0]?.subcategory.title}</h2>
+      <h2 className="mb-8 w-full lg:mb-12">
+        {tools.data[0]?.subcategory.title}
+      </h2>{" "}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -64,7 +67,7 @@ const ToolsList = ({
                   : "rounded-md border-b border-transparent py-2 "
               }`}
             >
-              <h3>{tool.title}</h3>
+              <h3>{tool.title}</h3>{" "}
               <span className="text-neutral-500">
                 {tool.description}{" "}
                 {tool.verified ? "(verified)" : "(not verified)"}
