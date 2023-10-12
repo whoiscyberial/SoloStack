@@ -8,7 +8,7 @@ const Container = ({
   return (
     <div
       {...props}
-      className={`${className} ml-[256px] flex min-h-screen min-w-[calc(100vw-256px)] items-center justify-center px-[32px] py-[24px] lg:px-[64px] lg:py-[32px]`}
+      className={`${className} flex min-h-screen w-full flex-col items-start justify-center px-[32px] py-32 md:ml-[256px] md:w-[calc(100vw-256px)] lg:px-[64px] lg:py-[32px]`}
     >
       {children}
     </div>

@@ -22,9 +22,7 @@ export default function Subcategory() {
       <>
         <Sidebar />
         <Container>
-          <div>
-            <ToolPage subcategorySlug={slug} toolId={parseInt(toolId)} />
-          </div>
+          <ToolPage subcategorySlug={slug} toolId={parseInt(toolId)} />
         </Container>
       </>
     );

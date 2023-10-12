@@ -4,6 +4,7 @@ import LoadingSpinner from "./ui/LoadingSpinner";
 import Link from "next/link";
 import { z } from "zod";
 import { AnimatePresence, motion } from "framer-motion";
+import useMobile from "@/utils/useMobile";
 
 const ToolsListPropsZod = z.object({
   subcategoryId: z.number().optional(),
@@ -31,6 +32,8 @@ const ToolsList = ({
     },
   );
 
+  const isMobile = useMobile();
+
   if (!tools.data) {
     return <LoadingSpinner />;
   }
@@ -41,6 +44,7 @@ const ToolsList = ({
 
   return (
     <AnimatePresence>
+      <h2 className="mb-4 block">{tools.data[0]?.subcategory.title}</h2>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -52,7 +56,11 @@ const ToolsList = ({
             <Link
               key={tool.id}
               href={`/${tool.subcategory.slug}/${tool.id}`}
-              className="flex w-full flex-col items-start justify-center gap-1 rounded-md px-4 py-2 text-start transition-all hover:bg-neutral-800"
+              className={`flex w-full flex-col items-start justify-center gap-1  px-4 py-2 text-start transition-all hover:bg-neutral-800 ${
+                isMobile
+                  ? "-mt-4 border-b border-neutral-800"
+                  : "rounded-md border-b border-transparent"
+              }`}
             >
               <h3>{tool.title}</h3>
               <span className="text-neutral-500">

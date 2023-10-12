@@ -57,9 +57,14 @@ const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
       </div>
       <span className="mt-1">{tool.data.description}</span>
       {tool.data.text && (
-        <p className="mb-4 mt-10 dark:text-neutral-300">{tool.data.text}</p>
+        <div className="mt-10">
+          <h3 className="">About</h3>
+          <p className="mb-1 mt-1 dark:text-neutral-300">{tool.data.text}</p>
+        </div>
       )}
-      <Button href={tool.data.link}>Check out {tool.data.title}</Button>
+      <Button className="mt-4" href={tool.data.link}>
+        Check out {tool.data.title}
+      </Button>
     </motion.div>
   );
 };
