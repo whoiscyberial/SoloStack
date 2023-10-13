@@ -1,8 +1,7 @@
-import React, { type PropsWithChildren, useContext } from "react";
+import React, { type PropsWithChildren } from "react";
 import Button from "./ui/Button";
 import { useSession } from "next-auth/react";
 import notification from "./ui/notification";
-import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
 import useToolFormStore from "@/store/toolFormStore";
 
 const ToolFormButton = ({

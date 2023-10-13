@@ -4,11 +4,10 @@ import { z } from "zod";
 import Button from "@/components/ui/Button";
 import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import notification from "./ui/notification";
 import LoadingOverlay from "./ui/LoadingOverlay";
 import { AnimatePresence, motion } from "framer-motion";
-import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
 import useCategoriesStore from "@/store/categoriesStore";
 import useToolFormStore from "@/store/toolFormStore";
 

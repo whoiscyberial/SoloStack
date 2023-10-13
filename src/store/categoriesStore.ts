@@ -1,4 +1,3 @@
-import { api } from "@/utils/api";
 import { type Category, type Subcategory } from "@prisma/client";
 import { create } from "zustand";
 
