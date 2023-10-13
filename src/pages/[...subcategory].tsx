@@ -9,7 +9,11 @@ export default function Subcategory() {
 
   const { subcategory } = router.query;
   if (!subcategory) {
-    return <LoadingOverlay />;
+    return (
+      <Container>
+        <LoadingOverlay />
+      </Container>
+    );
   } else if (
     typeof subcategory != "string" &&
     subcategory.length === 2 &&

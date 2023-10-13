@@ -1,6 +1,11 @@
 import { api } from "@/utils/api";
 import { type Category, type Subcategory } from "@prisma/client";
-import { type PropsWithChildren, createContext, useEffect, useState } from "react";
+import {
+  type PropsWithChildren,
+  createContext,
+  useEffect,
+  useState,
+} from "react";
 
 type Props = {
   close: () => void;
@@ -27,6 +32,10 @@ export const CategoriesAndToolFormContext = createContext({
 const ToolFormAndCategoriesProvider = ({ children }: PropsWithChildren) => {
   const categories = api.category.getAll.useQuery(undefined, {
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    cacheTime: 24 * 60 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 1,
   });
   const [contextState, setContexState] = useState<Props>({
     close: () => {},
