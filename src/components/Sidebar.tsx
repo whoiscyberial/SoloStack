@@ -10,7 +10,7 @@ import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
 const Sidebar = () => {
   const { state } = useContext(CategoriesAndToolFormContext);
   const { categories } = state;
-  const [activeSubcategory, setActiveSubcategory] = useState(-1);
+  const [activeSubcategory, setActiveSubcategory] = useState<number>(-1);
   const isMobile = useMobile();
   const [showSidebar, setShowSidebar] = useState(false);
   useEffect(() => {
@@ -18,9 +18,7 @@ const Sidebar = () => {
   }, [isMobile]);
 
   if (!categories) {
-    return (
-      <div className="absolute left-0 top-0 h-screen w-[256px] border-r border-neutral-800 bg-neutral-800/50 px-8 py-16"></div>
-    );
+    return;
   }
 
   return (
