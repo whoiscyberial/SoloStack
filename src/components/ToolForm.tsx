@@ -9,6 +9,8 @@ import notification from "./ui/notification";
 import LoadingOverlay from "./ui/LoadingOverlay";
 import { AnimatePresence, motion } from "framer-motion";
 import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
+import useCategoriesStore from "@/store/categoriesStore";
+import useToolFormStore from "@/store/toolFormStore";
 
 const validationSchema = z.object({
   title: z.string().min(3, { message: "Title is required" }),
@@ -33,8 +35,9 @@ const ToolForm = () => {
     resolver: zodResolver(validationSchema),
   });
 
-  const { state } = useContext(CategoriesAndToolFormContext);
-  const { categories, show, close } = state;
+  const close = useToolFormStore((state) => state.switchShow);
+  const show = useToolFormStore((state) => state.show);
+  const categories = useCategoriesStore((state) => state.categories);
   const createTool = api.tool.create.useMutation();
   const { data: sessionData } = useSession();
   useEffect(() => {

@@ -3,13 +3,14 @@ import Button from "./ui/Button";
 import { useSession } from "next-auth/react";
 import notification from "./ui/notification";
 import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
+import useToolFormStore from "@/store/toolFormStore";
 
 const ToolFormButton = ({
   className,
   children,
   ...props
 }: PropsWithChildren & { className?: string }) => {
-  const { state, setState } = useContext(CategoriesAndToolFormContext);
+  const open = useToolFormStore((state) => state.switchShow);
   const { data: sessionData } = useSession();
 
   const clickFn = () => {
@@ -17,7 +18,7 @@ const ToolFormButton = ({
       notification("You are not logged in");
       return;
     } else {
-      setState({ ...state, show: !state.show });
+      open();
     }
   };
 

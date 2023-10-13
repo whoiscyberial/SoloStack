@@ -1,18 +1,32 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginButton from "@/components/LoginButton";
 import ToolFormButton from "./ToolFormButton";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import Button from "./ui/Button";
 import useMobile from "@/utils/useMobile";
-import { CategoriesAndToolFormContext } from "@/context/ToolFormContext";
+import useCategoriesStore from "@/store/categoriesStore";
+import { api } from "@/utils/api";
 
 const Sidebar = () => {
-  const { state } = useContext(CategoriesAndToolFormContext);
-  const { categories } = state;
+  const categories = useCategoriesStore((state) => state.categories);
+  const setCategories = useCategoriesStore((state) => state.setCategories);
   const [activeSubcategory, setActiveSubcategory] = useState<number>(-1);
   const isMobile = useMobile();
   const [showSidebar, setShowSidebar] = useState(false);
+
+  const fetch = api.category.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    cacheTime: 24 * 60 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 1,
+  });
+
+  useEffect(() => {
+    setCategories(fetch.data!);
+  }, [fetch.isSuccess]);
+
   useEffect(() => {
     setShowSidebar(isMobile === false);
   }, [isMobile]);
