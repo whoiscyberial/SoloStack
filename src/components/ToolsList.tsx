@@ -43,14 +43,18 @@ const ToolsList = ({
   }
 
   return (
-    <div className="flex w-full max-w-[1280px] flex-col items-center justify-center">
+    <motion.div
+      key={tools.data[0]?.subcategoryId}
+      initial={{ opacity: 0, translateY: 30 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      exit={{ opacity: 0, translateY: -30 }}
+      transition={{ duration: 0.7 }}
+      className="flex w-full max-w-[1280px] flex-col items-center justify-center"
+    >
       <h2 className="mb-8 w-full lg:mb-12">
         {tools.data[0]?.subcategory.title}
       </h2>{" "}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+      <div
         className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  lg:grid-cols-2 xl:grid-cols-3 ${
           isMobile ? "" : "gap-y-4"
         }`}
@@ -74,8 +78,8 @@ const ToolsList = ({
             </Link>
           );
         })}
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 
