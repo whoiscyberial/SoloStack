@@ -5,9 +5,10 @@ type SwitchProps = {
   state: boolean;
   setState: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
+  message?: string;
 };
 
-const Switch = ({ state, setState, className }: SwitchProps) => {
+const Switch = ({ state, setState, className, message }: SwitchProps) => {
   return (
     <div className={`${className} flex items-center gap-3`}>
       <motion.button
@@ -26,7 +27,7 @@ const Switch = ({ state, setState, className }: SwitchProps) => {
           x
         </motion.button>
       </motion.button>
-      <span className="text-neutral-300">Show not verified tools</span>
+      {message && <span className="text-neutral-300">{message}</span>}
     </div>
   );
 };

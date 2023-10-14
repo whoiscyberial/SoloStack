@@ -42,7 +42,9 @@ const ToolForm = () => {
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
-      notification("Thank you for sharing!");
+      notification(
+        "Thank you for sharing! It will take time to verificate your tool.",
+      );
       close();
     }
   }, [isSubmitSuccessful, reset]);

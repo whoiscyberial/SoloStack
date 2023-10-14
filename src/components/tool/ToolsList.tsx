@@ -69,14 +69,17 @@ const ToolsList = ({
       transition={{ duration: 0.7 }}
       className="flex w-full max-w-[1280px] flex-col justify-center"
     >
-      <h2 className="mb-8 w-full lg:mb-12">{tools[0]?.subcategory.title}</h2>
-      {sessionData?.user.role === "ADMIN" && (
-        <Switch
-          className="mb-4"
-          state={showVerifiedOnly}
-          setState={setShowVerifiedOnly}
-        />
-      )}
+      <div className="mb-8 w-full lg:mb-12">
+        <h2>{tools[0]?.subcategory.title}</h2>
+        {sessionData?.user.role === "ADMIN" && (
+          <Switch
+            className="mt-4"
+            state={showVerifiedOnly}
+            setState={setShowVerifiedOnly}
+            message="Show not verified tools"
+          />
+        )}
+      </div>
       <div
         className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  lg:grid-cols-2 xl:grid-cols-3 ${
           isMobile ? "" : "gap-y-4"

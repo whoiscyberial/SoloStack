@@ -59,11 +59,11 @@ const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
         </svg>
       </Link>
       <h2>{tool.data.title}</h2>
-      <span className="mt-1">{tool.data.description}</span>
+      <span className="mt-1 text-neutral-500">{tool.data.description}</span>
       {tool.data.text && (
         <div className="mt-10">
           <h3 className="">About</h3>
-          <p className="mb-1 mt-1 dark:text-neutral-300">{tool.data.text}</p>
+          <p className="mb-1 mt-1 dark:text-neutral-300 ">{tool.data.text}</p>
         </div>
       )}
       <Button className="mt-4" href={tool.data.link}>
