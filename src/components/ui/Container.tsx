@@ -11,7 +11,7 @@ const Container = ({
       <Sidebar />
       <div
         {...props}
-        className={`${className} xs:py-32 flex min-h-screen w-full flex-col items-center justify-center px-[32px] py-12 md:ml-[256px] md:w-[calc(100vw-256px)] lg:px-[64px] lg:py-[32px]`}
+        className={`${className} xs:py-32 flex min-h-screen w-full flex-col items-center px-[32px] py-14 md:ml-[256px] md:w-[calc(100vw-256px)] lg:px-[64px] lg:py-14`}
       >
         {children}
       </div>

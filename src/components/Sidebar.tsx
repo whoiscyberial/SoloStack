@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import LoginButton from "@/components/LoginButton";
-import ToolFormButton from "./ToolFormButton";
-import { AnimatePresence, motion } from "framer-motion";
+import LoginButton from "@/components/ui/LoginButton";
+import ToolFormButton from "./tool/ToolFormButton";
 import Link from "next/link";
 import Button from "./ui/Button";
 import useMobile from "@/utils/useMobile";
 import useCategoriesStore from "@/store/categoriesStore";
 import { api } from "@/utils/api";
+import useSidebarStore from "@/store/sidebarStore";
+import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
   const categories = useCategoriesStore((state) => state.categories);
   const setCategories = useCategoriesStore((state) => state.setCategories);
-  const [activeSubcategory, setActiveSubcategory] = useState<number>(-1);
+  const activeSubcategory = useSidebarStore((state) => state.activeSubcategory);
+  const setActiveSubcategory = useSidebarStore(
+    (state) => state.setActiveSubcategory,
+  );
+  const { data: sessionData } = useSession();
+
   const isMobile = useMobile();
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -62,85 +68,70 @@ const Sidebar = () => {
           </Button>
         </div>
       )}
-      <AnimatePresence>
-        {showSidebar === true && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className=""
+      {showSidebar === true && (
+        <>
+          <div
+            className={`bg-neutral-850 fixed left-0 top-0 z-10 h-full min-h-full  w-[256px] overflow-y-auto border-r border-neutral-800 px-8 py-14`}
           >
-            <div
-              className={`bg-neutral-850 fixed left-0 top-0 z-10 h-full min-h-full  w-[256px] overflow-y-auto border-r border-neutral-800 px-8 py-14`}
-            >
-              <div className="grid grid-flow-row gap-y-14">
-                {categories.map((category) => {
-                  return (
-                    <motion.div
-                      key={category.id}
-                      className="grid grid-flow-row gap-y-[4px]"
-                      initial={{ translateX: -80, opacity: 0 }}
-                      transition={{
-                        delay: category.id / 5 - 0.25,
-                        duration: 0.6,
-                      }}
-                      animate={{ translateX: 0, opacity: 1 }}
-                    >
-                      <label className="mb-2 text-[12px] font-semibold dark:text-neutral-500">
-                        {category.title}
-                      </label>
-                      {category.subcategories.map((subcategory) => {
-                        return (
-                          // <button className="w-full rounded-md bg-neutral-800 px-4 py-2 text-start  shadow-sm">
-                          //   {subcategory.title}
-                          // </button>
-                          <Link
-                            href={`/${subcategory.slug}`}
-                            key={subcategory.id}
-                            onClick={() => {
-                              if (isMobile) {
-                                setShowSidebar(false);
-                              }
-                              setActiveSubcategory(subcategory.id);
-                            }}
-                            className={`${
-                              activeSubcategory === subcategory.id
-                                ? "w-full rounded-md bg-neutral-800 px-4 py-2 text-start  shadow-sm"
-                                : "w-full rounded-md px-4 py-2 text-start text-neutral-500 shadow-sm transition-all hover:text-neutral-200"
-                            }`}
-                          >
-                            {subcategory.title}
-                          </Link>
-                        );
-                      })}
-                    </motion.div>
-                  );
-                })}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{
-                    delay: categories.length / 5 + 0.4,
-                    duration: 0.6,
-                  }}
-                  className="grid grid-flow-row gap-y-4"
-                >
-                  <ToolFormButton className="text-left">
-                    Add your tool
-                  </ToolFormButton>
-                  <LoginButton className="text-left" />
-                </motion.div>
+            <div className="grid grid-flow-row gap-y-14">
+              {categories.map((category) => {
+                return (
+                  <div
+                    className="grid grid-flow-row gap-y-[4px]"
+                    key={category.id}
+                  >
+                    <label className="mb-2 text-[12px] font-semibold dark:text-neutral-500">
+                      {category.title}
+                    </label>
+                    {category.subcategories.map((subcategory) => {
+                      return (
+                        // <button className="w-full rounded-md bg-neutral-800 px-4 py-2 text-start  shadow-sm">
+                        //   {subcategory.title}
+                        // </button>
+                        <Link
+                          href={`/${subcategory.slug}`}
+                          key={subcategory.id}
+                          onClick={() => {
+                            if (isMobile) {
+                              setShowSidebar(false);
+                            }
+                            setActiveSubcategory(subcategory.id);
+                          }}
+                          className={`${
+                            activeSubcategory === subcategory.id
+                              ? "w-full rounded-md bg-neutral-800 px-4 py-2 text-start  shadow-sm"
+                              : "w-full rounded-md px-4 py-2 text-start text-neutral-500 shadow-sm transition-all hover:text-neutral-200"
+                          }`}
+                        >
+                          {subcategory.title}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+              <div className="grid grid-flow-row gap-y-4">
+                {sessionData && sessionData.user.role === "ADMIN" && (
+                  <Button className="text-left" href="/admin">
+                    Admin panel
+                  </Button>
+                )}
+                <ToolFormButton className="text-left">
+                  Add your tool
+                </ToolFormButton>
+
+                <LoginButton className="text-left" />
               </div>
             </div>
-            {showSidebar === true && isMobile === true && (
-              <div
-                className="absolute right-0 top-0 z-10 h-screen w-[calc(100vw-256px)] bg-transparent"
-                onClick={() => setShowSidebar(false)}
-              ></div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+          {showSidebar === true && isMobile === true && (
+            <div
+              className="absolute right-0 top-0 z-10 h-screen w-[calc(100vw-256px)] bg-neutral-950/50"
+              onClick={() => setShowSidebar(false)}
+            ></div>
+          )}
+        </>
+      )}
     </>
   );
 };

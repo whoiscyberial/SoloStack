@@ -1,9 +1,11 @@
 import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import React from "react";
-import LoadingSpinner from "./ui/LoadingSpinner";
-import Button from "./ui/Button";
+import LoadingSpinner from "../ui/LoadingSpinner";
+import Button from "../ui/Button";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { TRPCError } from "@trpc/server";
 
 type ToolPage = {
   subcategorySlug: string;
@@ -11,6 +13,7 @@ type ToolPage = {
 };
 
 const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
+  const { data: sessionData } = useSession();
   const tool = api.tool.getById.useQuery(
     { id: toolId },
     {
@@ -24,6 +27,10 @@ const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
 
   if (!tool.data) {
     return <LoadingSpinner />;
+  }
+
+  if (tool.data.verified === false && sessionData?.user.role != "ADMIN") {
+    throw new TRPCError({ code: "FORBIDDEN" });
   }
 
   return (

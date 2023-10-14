@@ -1,5 +1,5 @@
-import ToolPage from "@/components/ToolPage";
-import ToolsList from "@/components/ToolsList";
+import ToolPage from "@/components/tool/ToolPage";
+import ToolsList from "@/components/tool/ToolsList";
 import Container from "@/components/ui/Container";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
 import { useRouter } from "next/router";

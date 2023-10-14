@@ -20,7 +20,8 @@ const Tool = z.object({
   verified: z.boolean().default(false),
 });
 
-export const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
+const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
+const TOOL_VERIFICATION = ["VERIFIED", "NOT_VERIFIED"] as const;
 
 export const toolRouter = createTRPCRouter({
   // TOOL
@@ -39,7 +40,7 @@ export const toolRouter = createTRPCRouter({
     .input(
       z.object({
         sort: z.enum(TOOL_SORT_TYPES),
-        verifiedOnly: z.boolean().default(false),
+        verification: z.enum(TOOL_VERIFICATION).optional(),
       }),
     )
     .query(({ ctx, input }) => {
@@ -70,10 +71,17 @@ export const toolRouter = createTRPCRouter({
               },
             }
           : null),
-        ...(input.verifiedOnly === true
+        ...(input.verification === "VERIFIED"
           ? {
               where: {
                 verified: true,
+              },
+            }
+          : null),
+        ...(input.verification === "NOT_VERIFIED"
+          ? {
+              where: {
+                verified: false,
               },
             }
           : null),
@@ -86,7 +94,7 @@ export const toolRouter = createTRPCRouter({
         subcategoryId: z.number().optional(),
         slug: z.string().optional(),
         sort: z.enum(TOOL_SORT_TYPES),
-        verifiedOnly: z.boolean().default(false),
+        verification: z.enum(TOOL_VERIFICATION).optional(),
       }),
     )
     .query(({ ctx, input }) => {
@@ -130,10 +138,17 @@ export const toolRouter = createTRPCRouter({
               },
             }
           : null),
-        ...(input.verifiedOnly === true
+        ...(input.verification === "VERIFIED"
           ? {
               where: {
                 verified: true,
+              },
+            }
+          : null),
+        ...(input.verification === "NOT_VERIFIED"
+          ? {
+              where: {
+                verified: false,
               },
             }
           : null),

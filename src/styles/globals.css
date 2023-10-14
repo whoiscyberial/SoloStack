@@ -129,5 +129,4 @@ span {
   font-size: 14px;
   line-height: 16px;
   font-weight: 400;
-  @apply dark:text-neutral-500;
 }

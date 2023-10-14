@@ -8,7 +8,7 @@ import { api } from "@/utils/api";
 import { useTheme } from "@/utils/useTheme";
 
 import "@/styles/globals.css";
-import ToolForm from "@/components/ToolForm";
+import ToolForm from "@/components/tool/ToolForm";
 import { AnimatePresence, motion } from "framer-motion";
 
 const inter = Inter({ subsets: ["latin"] });
