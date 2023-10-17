@@ -88,19 +88,16 @@ const ToolsList = ({
         {tools.map((tool) => {
           return (
             <Link
-              key={tool.id}
               href={`/${tool.subcategory.slug}/${tool.id}`}
+              key={tool.id}
               className={`flex w-full flex-col items-start justify-center gap-1  px-4 text-start transition-all hover:bg-neutral-800 ${
                 isMobile
                   ? "border-b border-neutral-800 py-3"
                   : "rounded-md border-b border-transparent py-2 "
               }`}
             >
-              <h3>{tool.title}</h3>{" "}
-              <span className="text-neutral-500">
-                {tool.description}{" "}
-                {tool.verified ? "(verified)" : "(not verified)"}
-              </span>
+              <h3>{tool.title}</h3>
+              <span className="text-neutral-500">{tool.description}</span>
             </Link>
           );
         })}
