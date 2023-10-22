@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import { EdgeStoreProvider } from "@/server/edgestore";
 
 import { api } from "@/utils/api";
 import { useTheme } from "@/utils/useTheme";
@@ -20,17 +21,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
   useTheme();
   return (
     <AnimatePresence mode="wait">
-      <SessionProvider session={session}>
-        <motion.main
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className={`${inter.className} flex min-h-screen w-screen flex-col items-center justify-center bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-200`}
-        >
-          <Component {...pageProps} />
-          <Toaster position="bottom-left" reverseOrder={false} />
-          <ToolForm />
-        </motion.main>
-      </SessionProvider>
+      <EdgeStoreProvider>
+        <SessionProvider session={session}>
+          <motion.main
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className={`${inter.className} flex min-h-screen w-screen flex-col items-center justify-center bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-200`}
+          >
+            <Component {...pageProps} />
+            <Toaster position="bottom-left" reverseOrder={false} />
+            <ToolForm />
+          </motion.main>
+        </SessionProvider>
+      </EdgeStoreProvider>
     </AnimatePresence>
   );
 };
