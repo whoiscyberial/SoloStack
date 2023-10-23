@@ -17,6 +17,9 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["files.edgestore.dev"],
+  },
 };
 
 export default config;

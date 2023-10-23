@@ -8,6 +8,7 @@ import useMobile from "@/utils/useMobile";
 import { type Tool } from "@prisma/client";
 import Switch from "../ui/Switch";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const ToolsListPropsZod = z.object({
   subcategoryId: z.number().optional(),
@@ -90,14 +91,25 @@ const ToolsList = ({
             <Link
               href={`/${tool.subcategory.slug}/${tool.id}`}
               key={tool.id}
-              className={`flex w-full flex-col items-start justify-center gap-1  px-4 text-start transition-all hover:bg-neutral-800 ${
+              className={`flex w-full flex-row items-start  gap-1  px-4 text-start transition-all hover:bg-neutral-800 ${
                 isMobile
                   ? "border-b border-neutral-800 py-3"
                   : "rounded-md border-b border-transparent py-2 "
               }`}
             >
-              <h3>{tool.title}</h3>
-              <span className="text-neutral-500">{tool.description}</span>
+              {tool.logoUrl && (
+                <Image
+                  src={tool.logoUrl as string}
+                  height={40}
+                  width={40}
+                  alt="logo"
+                  className="-mt-[2px] mr-2 rounded-md border border-neutral-800"
+                />
+              )}
+              <section>
+                <h3 className="mb-[2px]">{tool.title}</h3>
+                <span className="text-neutral-400/70">{tool.description}</span>
+              </section>
             </Link>
           );
         })}
