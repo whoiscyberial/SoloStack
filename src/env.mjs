@@ -26,6 +26,8 @@ export const env = createEnv({
     // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
+    EDGE_STORE_ACCESS_KEY: z.string(),
+    EDGE_STORE_SECRET_KEY: z.string(),
   },
 
   /**
@@ -49,6 +51,8 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    EDGE_STORE_ACCESS_KEY: process.env.EDGE_STORE_ACCESS_KEY,
+    EDGE_STORE_SECRET_KEY: process.env.EDGE_STORE_SECRET_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

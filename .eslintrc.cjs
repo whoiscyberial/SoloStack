@@ -18,6 +18,7 @@ const config = {
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-empty-function": "off",
     "react-hooks/exhaustive-deps": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
 
     "@typescript-eslint/consistent-type-imports": [
       "warn",
