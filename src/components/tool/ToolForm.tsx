@@ -47,9 +47,7 @@ const ToolForm = () => {
     if (isSubmitSuccessful) {
       reset();
       notification(
-        initValue
-          ? "Thank you for sharing! It will take time to verificate your tool."
-          : "Tool edited succefully.",
+        "Thank you for sharing! It will take time to verificate your tool.",
       );
       close();
     }
