@@ -20,12 +20,12 @@ const Switch = ({ state, setState, className, message }: SwitchProps) => {
           setState(!state);
         }}
       >
-        <motion.button
+        <motion.div
           layout
           className="w-[28px] rounded-lg bg-neutral-300 text-neutral-300 shadow-md shadow-neutral-900/20"
         >
           x
-        </motion.button>
+        </motion.div>
       </motion.button>
       {message && <span className="text-neutral-300">{message}</span>}
     </div>

@@ -20,6 +20,8 @@ const Tool = z.object({
   verified: z.boolean().default(false),
 });
 
+const ToolWithId = Tool.merge(z.object({ id: z.number() }));
+
 const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
 const TOOL_VERIFICATION = ["VERIFIED", "NOT_VERIFIED"] as const;
 
@@ -154,6 +156,10 @@ export const toolRouter = createTRPCRouter({
           : null),
       });
     }),
+
+  update: protectedProcedure.input(ToolWithId).mutation(({ ctx, input }) => {
+    return ctx.db.tool.update({ where: { id: input.id }, data: input });
+  }),
 
   delete: adminProcedure
     .input(z.object({ id: z.number() }))

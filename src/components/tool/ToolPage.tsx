@@ -6,6 +6,8 @@ import Button from "../ui/Button";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { TRPCError } from "@trpc/server";
+import EditToolButton from "./EditToolButton";
+import { type ToolSchema } from "./ToolForm";
 
 type ToolPage = {
   subcategorySlug: string;
@@ -14,7 +16,7 @@ type ToolPage = {
 
 const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
   const { data: sessionData } = useSession();
-  const tool = api.tool.getById.useQuery(
+  const fetchTool = api.tool.getById.useQuery(
     { id: toolId },
     {
       refetchOnWindowFocus: false,
@@ -25,13 +27,23 @@ const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
     },
   );
 
-  if (!tool.data) {
+  if (!fetchTool.data) {
     return <LoadingSpinner />;
   }
 
-  if (tool.data.verified === false && sessionData?.user.role != "ADMIN") {
+  if (fetchTool.data.verified === false && sessionData?.user.role != "ADMIN") {
     throw new TRPCError({ code: "FORBIDDEN" });
   }
+
+  const data = fetchTool.data;
+  const tool: ToolSchema = {
+    id: data.id,
+    title: data.title,
+    description: data.description,
+    link: data.link,
+    subcategoryId: data.subcategoryId.toString(),
+    ...(data.text ? { text: data.text } : null),
+  };
 
   return (
     <motion.div
@@ -58,16 +70,17 @@ const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
           />
         </svg>
       </Link>
-      <h2>{tool.data.title}</h2>
-      <span className="mt-1 text-neutral-500">{tool.data.description}</span>
-      {tool.data.text && (
+      <h2>{tool.title}</h2>
+      <EditToolButton tool={tool}> Edit </EditToolButton>
+      <span className="mt-1 text-neutral-500">{tool.description}</span>
+      {tool.text && (
         <div className="mt-10">
           <h3 className="">About</h3>
-          <p className="mb-1 mt-1 dark:text-neutral-300 ">{tool.data.text}</p>
+          <p className="mb-1 mt-1 dark:text-neutral-300 ">{tool.text}</p>
         </div>
       )}
-      <Button className="mt-4" href={tool.data.link}>
-        Check out {tool.data.title}
+      <Button className="mt-4" href={tool.link}>
+        Check out {tool.title}
       </Button>
     </motion.div>
   );

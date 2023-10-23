@@ -12,6 +12,7 @@ import useCategoriesStore from "@/store/categoriesStore";
 import useToolFormStore from "@/store/toolFormStore";
 
 const validationSchema = z.object({
+  id: z.number().optional().default(-1),
   title: z.string().min(3, { message: "Title is required" }),
   description: z
     .string()
@@ -22,59 +23,79 @@ const validationSchema = z.object({
   link: z.string().url({ message: "Please provide a full link to tool" }),
   verified: z.boolean().optional(),
 });
-type ValidationSchema = z.infer<typeof validationSchema>;
+export type ToolSchema = z.infer<typeof validationSchema>;
 
 const ToolForm = () => {
+  const initValue = useToolFormStore((state) => state.initValue);
+  const close = useToolFormStore((state) => state.close);
+  const isShown = useToolFormStore((state) => state.isShown);
+  const categories = useCategoriesStore((state) => state.categories);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitSuccessful, isSubmitting, isValidating },
-  } = useForm<ValidationSchema>({
+  } = useForm<ToolSchema>({
     resolver: zodResolver(validationSchema),
+    values: initValue,
   });
 
-  const close = useToolFormStore((state) => state.switchShow);
-  const show = useToolFormStore((state) => state.show);
-  const categories = useCategoriesStore((state) => state.categories);
   const createTool = api.tool.create.useMutation();
+  const updateTool = api.tool.update.useMutation();
   const { data: sessionData } = useSession();
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
       notification(
-        "Thank you for sharing! It will take time to verificate your tool.",
+        initValue
+          ? "Thank you for sharing! It will take time to verificate your tool."
+          : "Tool edited succefully.",
       );
       close();
     }
   }, [isSubmitSuccessful, reset]);
 
+  useEffect(() => {
+    !isShown ? setTimeout(() => reset(), 300) : null;
+  }, [isShown]);
   // No hooks after this line
 
   if (!categories || !sessionData) {
-    return <>{show && <LoadingOverlay />}</>;
+    return <>{isShown && <LoadingOverlay />}</>;
   }
 
-  const onSubmit: SubmitHandler<ValidationSchema> = (data) => {
-    if (sessionData.user.role === "ADMIN") {
-      data.verified = true;
+  const onSubmit: SubmitHandler<ToolSchema> = (data) => {
+    sessionData.user.role === "ADMIN"
+      ? (data.verified = true)
+      : (data.verified = false);
+
+    if (initValue) {
+      updateTool.mutate({
+        id: initValue.id,
+        title: data.title,
+        description: data.description,
+        text: data.text,
+        link: data.link,
+        subcategoryId: parseInt(data.subcategoryId),
+        creatorId: sessionData.user.id,
+        verified: data.verified,
+      });
     } else {
-      data.verified = false;
+      createTool.mutate({
+        title: data.title,
+        description: data.description,
+        text: data.text,
+        link: data.link,
+        subcategoryId: parseInt(data.subcategoryId),
+        creatorId: sessionData.user.id,
+        verified: data.verified,
+      });
     }
-    createTool.mutate({
-      title: data.title,
-      description: data.description,
-      text: data.text,
-      link: data.link,
-      subcategoryId: parseInt(data.subcategoryId),
-      creatorId: sessionData.user.id,
-      verified: data.verified,
-    });
   };
 
   return (
     <AnimatePresence>
-      {show && (
+      {isShown && (
         <motion.div
           onClick={close}
           className="absolute left-0 top-0 z-10 h-screen w-screen items-center justify-center bg-neutral-950/70"
