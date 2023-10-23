@@ -4,12 +4,13 @@ import { z } from "zod";
 import Button from "@/components/ui/Button";
 import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import notification from "../ui/notification";
 import LoadingOverlay from "../ui/LoadingOverlay";
 import { AnimatePresence, motion } from "framer-motion";
 import useCategoriesStore from "@/store/categoriesStore";
 import useToolFormStore from "@/store/toolFormStore";
+import { useEdgeStore } from "@/server/edgestore";
 
 const validationSchema = z.object({
   id: z.number().optional().default(-1),
@@ -22,14 +23,22 @@ const validationSchema = z.object({
   subcategoryId: z.string().min(1, { message: "Please choose a Subcategory" }),
   link: z.string().url({ message: "Please provide a full link to tool" }),
   verified: z.boolean().optional(),
+  logoUrl: z.string().url().optional(),
 });
 export type ToolSchema = z.infer<typeof validationSchema>;
 
 const ToolForm = () => {
+  // edge store and images.
+  const [logo, setLogo] = useState<File>();
+  const { edgestore } = useEdgeStore();
+
+  // zustand store
   const initValue = useToolFormStore((state) => state.initValue);
   const close = useToolFormStore((state) => state.close);
   const isShown = useToolFormStore((state) => state.isShown);
   const categories = useCategoriesStore((state) => state.categories);
+
+  // react hook form
   const {
     register,
     handleSubmit,
@@ -40,9 +49,22 @@ const ToolForm = () => {
     values: initValue,
   });
 
+  // trpc procedures
   const createTool = api.tool.create.useMutation();
   const updateTool = api.tool.update.useMutation();
+  const subcategoriesFetch = api.subcategory.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    cacheTime: 24 * 60 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 1,
+  });
+  const subcategories = subcategoriesFetch.data;
+
+  // session
   const { data: sessionData } = useSession();
+
+  // action on submit
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -53,19 +75,36 @@ const ToolForm = () => {
     }
   }, [isSubmitSuccessful, reset]);
 
+  // action on render
   useEffect(() => {
     !isShown ? setTimeout(() => reset(), 300) : null;
   }, [isShown]);
-  // No hooks after this line
 
-  if (!categories || !sessionData) {
+  // loading
+  if (!categories || !sessionData || !subcategories) {
     return <>{isShown && <LoadingOverlay />}</>;
   }
 
-  const onSubmit: SubmitHandler<ToolSchema> = (data) => {
+  // handle submit
+  const onSubmit: SubmitHandler<ToolSchema> = async (data) => {
     sessionData.user.role === "ADMIN"
       ? (data.verified = true)
       : (data.verified = false);
+
+    if (logo) {
+      const selectedSubcategory = subcategories.find((subcategory) => {
+        return subcategory.id == parseInt(data.subcategoryId);
+      });
+      const subcategoryTitle = selectedSubcategory?.slug;
+      const logoResult = await edgestore.logotypes.upload({
+        input: { subcategory: subcategoryTitle! },
+        file: logo,
+        onProgressChange: (progress) => {
+          console.log(progress);
+        },
+      });
+      logoResult.thumbnailUrl ? (data.logoUrl = logoResult.thumbnailUrl) : null;
+    }
 
     if (initValue) {
       updateTool.mutate({
@@ -77,6 +116,7 @@ const ToolForm = () => {
         subcategoryId: parseInt(data.subcategoryId),
         creatorId: sessionData.user.id,
         verified: data.verified,
+        ...(data.logoUrl ? { logoUrl: data.logoUrl } : null),
       });
     } else {
       createTool.mutate({
@@ -87,6 +127,7 @@ const ToolForm = () => {
         subcategoryId: parseInt(data.subcategoryId),
         creatorId: sessionData.user.id,
         verified: data.verified,
+        ...(data.logoUrl ? { logoUrl: data.logoUrl } : null),
       });
     }
   };
@@ -226,6 +267,21 @@ const ToolForm = () => {
                 </p>
               )}
             </div>
+
+            <label
+              htmlFor="logo-upload"
+              className="mb-4 flex w-full items-center justify-center border-2 border-dashed border-neutral-700 py-8 text-neutral-600 transition-all hover:cursor-pointer hover:bg-neutral-800 hover:text-neutral-200"
+            >
+              {logo?.name ? logo.name : "Logotype (256x256 will be fine)"}
+            </label>
+            <input
+              id="logo-upload"
+              type="file"
+              onChange={(e) => {
+                setLogo(e.target.files?.[0]);
+              }}
+              className="hidden"
+            />
 
             <div className="mb-6 text-center">
               <Button

@@ -1,11 +1,15 @@
 import { initEdgeStore } from "@edgestore/server";
 import { createEdgeStoreNextHandler } from "@edgestore/server/adapters/next/pages";
+import { z } from "zod";
 
 const es = initEdgeStore.create();
 
-// main router
+/** main router */
 const edgeStoreRouter = es.router({
-  publicFiles: es.fileBucket(),
+  logotypes: es
+    .imageBucket({ maxSize: 1024 * 1024 * 10 })
+    .input(z.object({ subcategory: z.string() }))
+    .path(({ input }) => [{ subcategory: input.subcategory }]),
 });
 
 export default createEdgeStoreNextHandler({

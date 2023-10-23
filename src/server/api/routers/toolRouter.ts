@@ -18,6 +18,7 @@ const Tool = z.object({
   link: z.string().url({ message: "Please provide a full link to tool" }),
   creatorId: z.string(),
   verified: z.boolean().default(false),
+  logoUrl: z.string().url().optional(),
 });
 
 const ToolWithId = Tool.merge(z.object({ id: z.number() }));
