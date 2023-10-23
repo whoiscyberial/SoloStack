@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import React from "react";
 import Button from "../ui/Button";
 import { useSession } from "next-auth/react";
 import notification from "../ui/notification";
@@ -10,7 +10,10 @@ const EditToolButton = ({
   children,
   tool,
   ...props
-}: PropsWithChildren & { className?: string; tool: ToolSchema }) => {
+}: React.ComponentPropsWithoutRef<"button"> & {
+  className?: string;
+  tool: ToolSchema;
+}) => {
   const open = useToolFormStore((state) => state.show);
   const setInitValue = useToolFormStore((state) => state.setInitValue);
   const { data: sessionData } = useSession();

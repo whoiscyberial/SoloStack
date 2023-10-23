@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import React from "react";
 import Button from "../ui/Button";
 import { useSession } from "next-auth/react";
 import notification from "../ui/notification";
@@ -8,7 +8,7 @@ const ToolFormButton = ({
   className,
   children,
   ...props
-}: PropsWithChildren & { className?: string }) => {
+}: React.ComponentPropsWithoutRef<"button"> & { className?: string }) => {
   const open = useToolFormStore((state) => state.show);
   const { data: sessionData } = useSession();
 
