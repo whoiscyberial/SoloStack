@@ -28,6 +28,8 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: z.string(),
     EDGE_STORE_ACCESS_KEY: z.string(),
     EDGE_STORE_SECRET_KEY: z.string(),
+    UPSTASH_REDIS_REST_URL: z.string(),
+    UPSTASH_REDIS_REST_TOKEN: z.string(),
   },
 
   /**
@@ -53,6 +55,8 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     EDGE_STORE_ACCESS_KEY: process.env.EDGE_STORE_ACCESS_KEY,
     EDGE_STORE_SECRET_KEY: process.env.EDGE_STORE_SECRET_KEY,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

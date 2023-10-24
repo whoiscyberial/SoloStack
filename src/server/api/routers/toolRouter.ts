@@ -6,7 +6,10 @@ import {
   publicProcedure,
   adminProcedure,
 } from "@/server/api/trpc";
+import { createRateLimiter } from "@/server/redis";
+import { TRPCError } from "@trpc/server";
 
+// types for query inputs
 const Tool = z.object({
   title: z.string().min(3, { message: "Title is required" }),
   description: z
@@ -20,16 +23,18 @@ const Tool = z.object({
   verified: z.boolean().default(false),
   logoUrl: z.string().url().optional(),
 });
-
 const ToolWithId = Tool.merge(z.object({ id: z.number() }));
-
 const TOOL_SORT_TYPES = ["newestFirst", "mostLikedFirst"] as const;
 const TOOL_VERIFICATION = ["VERIFIED", "NOT_VERIFIED"] as const;
 
 export const toolRouter = createTRPCRouter({
-  // TOOL
-
-  create: protectedProcedure.input(Tool).mutation(({ ctx, input }) => {
+  create: protectedProcedure.input(Tool).mutation(async ({ ctx, input }) => {
+    if (ctx.session.user.role != "ADMIN") {
+      const { success } = await createRateLimiter.limit(ctx.session.user.id);
+      if (!success) {
+        throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+      }
+    }
     return ctx.db.tool.create({ data: input });
   }),
 
