@@ -12,6 +12,8 @@ import useCategoriesStore from "@/store/categoriesStore";
 import useToolFormStore from "@/store/toolFormStore";
 import { useEdgeStore } from "@/server/edgestore";
 
+const PLACEHOLDER_IMAGE_URL =
+  "https://files.edgestore.dev/wcjllha84x9p1pkv/logotypes/_public/no-code-tools/d53c8031-b222-446c-b4e2-ea289eac26a7-thumb.png";
 const validationSchema = z.object({
   id: z.number().optional().default(-1),
   title: z.string().min(3, { message: "Title is required" }),
@@ -72,12 +74,18 @@ const ToolForm = () => {
         "Thank you for sharing! It will take time to verificate your tool.",
       );
       close();
+      setLogo(undefined);
     }
   }, [isSubmitSuccessful, reset]);
 
   // action on render
   useEffect(() => {
-    !isShown ? setTimeout(() => reset(), 300) : null;
+    !isShown
+      ? setTimeout(() => {
+          reset();
+          setLogo(undefined);
+        }, 300)
+      : null;
   }, [isShown]);
 
   // loading
@@ -116,7 +124,9 @@ const ToolForm = () => {
         subcategoryId: parseInt(data.subcategoryId),
         creatorId: sessionData.user.id,
         verified: data.verified,
-        ...(data.logoUrl ? { logoUrl: data.logoUrl } : null),
+        ...(data.logoUrl
+          ? { logoUrl: data.logoUrl }
+          : { logoUrl: PLACEHOLDER_IMAGE_URL }),
       });
     } else {
       createTool.mutate({
@@ -127,7 +137,9 @@ const ToolForm = () => {
         subcategoryId: parseInt(data.subcategoryId),
         creatorId: sessionData.user.id,
         verified: data.verified,
-        ...(data.logoUrl ? { logoUrl: data.logoUrl } : null),
+        ...(data.logoUrl
+          ? { logoUrl: data.logoUrl }
+          : { logoUrl: PLACEHOLDER_IMAGE_URL }),
       });
     }
   };
