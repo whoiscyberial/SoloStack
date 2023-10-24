@@ -158,7 +158,7 @@ const ToolForm = () => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="absolute left-[50%] top-[50%] z-20 mb-4 w-screen translate-x-[-50%] translate-y-[-50%] flex-col rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:w-[70vw] lg:w-[70vw] xl:w-[50vw]"
+            className="z-20 mb-4 flex h-full w-screen flex-col rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:absolute md:left-[50%] md:top-[50%] md:h-auto md:w-[70vw] md:translate-x-[-50%] md:translate-y-[-50%] lg:w-[70vw] xl:w-[50vw]"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="mb-4">
@@ -270,7 +270,7 @@ const ToolForm = () => {
                 } focus:shadow-outline appearance-none rounded focus:outline-none`}
                 id="text"
                 placeholder="Outseta is a membership SaaS platform that lets you connect your frontend with it and turn it into a membership website."
-                rows={24}
+                rows={14}
                 {...register("text")}
               />
               {errors.text && (
@@ -284,7 +284,7 @@ const ToolForm = () => {
               htmlFor="logo-upload"
               className="mb-4 flex w-full items-center justify-center border-2 border-dashed border-neutral-700 py-8 text-neutral-600 transition-all hover:cursor-pointer hover:bg-neutral-800 hover:text-neutral-200"
             >
-              {logo?.name ? logo.name : "Logotype (256x256 will be fine)"}
+              {logo?.name ? logo.name : "Logotype (optional)"}
             </label>
             <input
               id="logo-upload"
@@ -299,9 +299,15 @@ const ToolForm = () => {
               <Button
                 disabled={isSubmitting || isValidating}
                 type="submit"
-                className="w-full"
+                className="w-full transition-all disabled:animate-pulse disabled:bg-neutral-800"
               >
                 Add tool
+              </Button>
+            </div>
+
+            <div className="mb- text-center">
+              <Button className="w-full" onClick={() => close()}>
+                Close
               </Button>
             </div>
           </form>

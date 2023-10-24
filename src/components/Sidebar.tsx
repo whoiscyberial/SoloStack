@@ -3,7 +3,6 @@ import LoginButton from "@/components/ui/LoginButton";
 import ToolFormButton from "./tool/ToolFormButton";
 import Link from "next/link";
 import Button from "./ui/Button";
-import useMobile from "@/utils/useMobile";
 import useCategoriesStore from "@/store/categoriesStore";
 import { api } from "@/utils/api";
 import useSidebarStore from "@/store/sidebarStore";
@@ -18,7 +17,6 @@ const Sidebar = () => {
   );
   const { data: sessionData } = useSession();
 
-  const isMobile = useMobile();
   const [showSidebar, setShowSidebar] = useState(false);
 
   const fetch = api.category.getAll.useQuery(undefined, {
@@ -33,18 +31,14 @@ const Sidebar = () => {
     setCategories(fetch.data!);
   }, [fetch.isSuccess]);
 
-  useEffect(() => {
-    setShowSidebar(isMobile === false);
-  }, [isMobile]);
-
   if (!categories) {
     return;
   }
 
   return (
     <>
-      {showSidebar === false && isMobile === true && (
-        <div className="sticky right-0 top-0 w-full ">
+      {showSidebar === false && (
+        <div className="sticky right-0 top-0 w-full md:hidden ">
           <Button
             className=" absolute right-4 top-4 px-[10px] py-[10px]"
             onClick={() => {
@@ -71,7 +65,7 @@ const Sidebar = () => {
       {showSidebar === true && (
         <>
           <div
-            className={`bg-neutral-850 fixed left-0 top-0 z-10 h-full min-h-full  w-[256px] overflow-y-auto border-r border-neutral-800 px-8 py-14`}
+            className={`fixed left-0 top-0 z-10 h-full min-h-full w-[256px]  overflow-y-auto border-r border-neutral-800 bg-neutral-850 px-8 py-14`}
           >
             <div className="grid grid-flow-row gap-y-14">
               {categories.map((category) => {
@@ -92,9 +86,6 @@ const Sidebar = () => {
                           href={`/${subcategory.slug}`}
                           key={subcategory.id}
                           onClick={() => {
-                            if (isMobile) {
-                              setShowSidebar(false);
-                            }
                             setActiveSubcategory(subcategory.id);
                           }}
                           className={`${
@@ -124,7 +115,7 @@ const Sidebar = () => {
               </div>
             </div>
           </div>
-          {showSidebar === true && isMobile === true && (
+          {showSidebar === true && (
             <div
               className="absolute right-0 top-0 z-10 h-screen w-[calc(100vw-256px)] bg-neutral-950/50"
               onClick={() => setShowSidebar(false)}

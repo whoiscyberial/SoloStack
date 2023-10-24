@@ -4,7 +4,6 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 import Link from "next/link";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import useMobile from "@/utils/useMobile";
 import { type Tool } from "@prisma/client";
 import Switch from "../ui/Switch";
 import { useSession } from "next-auth/react";
@@ -51,8 +50,6 @@ const ToolsList = ({
     }
   }, [showVerifiedOnly, subcategorySlug, subcategoryId, fetchTools.isSuccess]);
 
-  const isMobile = useMobile();
-
   if (!fetchTools.data) {
     return <LoadingSpinner />;
   }
@@ -82,20 +79,14 @@ const ToolsList = ({
         )}
       </div>
       <div
-        className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  lg:grid-cols-2 xl:grid-cols-3 ${
-          isMobile ? "" : "gap-y-4"
-        }`}
+        className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 xl:grid-cols-3`}
       >
         {tools.map((tool) => {
           return (
             <Link
               href={`/${tool.subcategory.slug}/${tool.id}`}
               key={tool.id}
-              className={`flex w-full flex-row items-start  gap-1  px-4 text-start transition-all hover:bg-neutral-800 ${
-                isMobile
-                  ? "border-b border-neutral-800 py-3"
-                  : "rounded-md border-b border-transparent py-2 "
-              }`}
+              className={`flex w-full flex-row items-start  gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
             >
               {tool.logoUrl && (
                 <Image
