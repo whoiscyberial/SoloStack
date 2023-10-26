@@ -4,7 +4,6 @@ import ToolFormButton from "./tool/ToolFormButton";
 import Link from "next/link";
 import Button from "./ui/Button";
 import useCategoriesStore from "@/store/categoriesStore";
-import { api } from "@/utils/api";
 import useSidebarStore from "@/store/sidebarStore";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
@@ -12,7 +11,6 @@ import { useWindowSize } from "@uidotdev/usehooks";
 
 const Sidebar = () => {
   const categories = useCategoriesStore((state) => state.categories);
-  const setCategories = useCategoriesStore((state) => state.setCategories);
   const activeSubcategory = useSidebarStore((state) => state.activeSubcategory);
   const setActiveSubcategory = useSidebarStore(
     (state) => state.setActiveSubcategory,
@@ -34,18 +32,6 @@ const Sidebar = () => {
       setShowSidebar(false);
     }
   }, [isMobile]);
-
-  const fetch = api.category.getAll.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    cacheTime: 24 * 60 * 60 * 1000,
-    staleTime: 24 * 60 * 60 * 1000,
-    retry: 1,
-  });
-
-  useEffect(() => {
-    setCategories(fetch.data!);
-  }, [fetch.isSuccess]);
 
   if (!categories) {
     return;
