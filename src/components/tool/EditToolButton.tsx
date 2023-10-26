@@ -27,6 +27,11 @@ const EditToolButton = ({
     }
   };
 
+  // do not show button to users
+  if (sessionData?.user.role != "ADMIN") {
+    return;
+  }
+
   return (
     <Button
       {...props}

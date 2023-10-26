@@ -20,7 +20,6 @@ const DeleteToolButton = ({
   const clickFn = () => {
     if (!sessionData || sessionData?.user.role != "ADMIN") {
       notification("You are not logged in");
-      return;
     } else {
       deleteTool.mutate({ id: toolId });
     }
@@ -32,6 +31,11 @@ const DeleteToolButton = ({
       router.back();
     }
   }, [deleteTool.isSuccess]);
+
+  // do not show button to users
+  if (sessionData?.user.role != "ADMIN") {
+    return;
+  }
 
   return (
     <Button
