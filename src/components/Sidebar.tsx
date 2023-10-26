@@ -6,7 +6,6 @@ import Button from "./ui/Button";
 import useCategoriesStore from "@/store/categoriesStore";
 import useSidebarStore from "@/store/sidebarStore";
 import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
 import { useWindowSize } from "@uidotdev/usehooks";
 
 const Sidebar = () => {
@@ -66,9 +65,7 @@ const Sidebar = () => {
       )}
       {showSidebar && (
         <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <div
             className={`fixed left-0 top-0 z-10 h-full min-h-full w-[256px] overflow-y-auto border-r  border-neutral-800 bg-neutral-850 px-8 py-14 transition-all`}
           >
             <div className="grid grid-flow-row gap-y-14">
@@ -119,14 +116,12 @@ const Sidebar = () => {
                 <LoginButton className="text-left" />
               </div>
             </div>
-          </motion.div>
+          </div>
           {showSidebar && isMobile && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+            <div
               className="absolute right-0 top-0 z-10 h-screen w-[calc(100vw-256px)] bg-neutral-950/50"
               onClick={() => setShowSidebar(false)}
-            ></motion.div>
+            ></div>
           )}
         </>
       )}
