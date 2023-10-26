@@ -16,6 +16,9 @@ export default function Subcategory() {
     (state) => state.setActiveSubcategory,
   );
 
+  // FETCH ALL DATA METHOD (may be slow in future):
+  const { data: tools } = api.tool.getAll.useQuery({ sort: "mostLikedFirst" });
+
   const fetch = api.category.getAll.useQuery(undefined, {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -29,7 +32,7 @@ export default function Subcategory() {
   }, [fetch.isSuccess]);
 
   const { subcategory } = router.query;
-  if (!subcategory || !categories) {
+  if (!subcategory || !categories || !tools) {
     return (
       <Container>
         <LoadingOverlay />
@@ -47,7 +50,7 @@ export default function Subcategory() {
         <ToolPage subcategorySlug={slug} toolId={parseInt(toolId)} />
       </Container>
     );
-  } else if (subcategory.length === 1) {
+  } else if (subcategory[0] && subcategory.length === 1) {
     categories.map((c) => {
       c.subcategories.map((subc) => {
         if (subc.slug === subcategory[0]) {
@@ -56,9 +59,10 @@ export default function Subcategory() {
       });
     });
 
+    // PASSING ALL TOOLS TO EACH PAGE (may be slow in future)
     return (
       <Container>
-        <ToolsList sort="mostLikedFirst" subcategorySlug={subcategory[0]} />
+        <ToolsList subcategorySlug={subcategory[0]} data={tools} />
       </Container>
     );
   }
