@@ -4,6 +4,7 @@ import Container from "@/components/ui/Container";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
 import useCategoriesStore from "@/store/categoriesStore";
 import useSidebarStore from "@/store/sidebarStore";
+import useUserStore from "@/store/userStore";
 import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -28,20 +29,36 @@ export default function Subcategory() {
     },
   );
 
-  const fetch = api.category.getAll.useQuery(undefined, {
+  // fetch favorite tools of user
+  const favoriteToolsFetch = api.user.getFavorites.useQuery(undefined, {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     cacheTime: 24 * 60 * 60 * 1000,
     staleTime: 24 * 60 * 60 * 1000,
     retry: 1,
   });
-
+  const favoriteTools = favoriteToolsFetch?.data?.favoriteTools;
+  const setFavoriteTools = useUserStore((state) => state.setFavoriteTools);
   useEffect(() => {
-    setCategories(fetch.data!);
-  }, [fetch.isSuccess]);
+    if (favoriteToolsFetch.data) {
+      setFavoriteTools(favoriteToolsFetch.data.favoriteTools!);
+    }
+  }, [favoriteToolsFetch.isSuccess]);
+
+  // fetch categories for sidebar
+  const categoryFetch = api.category.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    cacheTime: 24 * 60 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 1,
+  });
+  useEffect(() => {
+    setCategories(categoryFetch.data!);
+  }, [categoryFetch.isSuccess]);
 
   const { subcategory } = router.query;
-  if (!subcategory || !categories || !tools) {
+  if (!subcategory || !categories || !tools || !favoriteTools) {
     return (
       <Container>
         <LoadingOverlay />
@@ -62,6 +79,16 @@ export default function Subcategory() {
     );
   } else if (subcategory[0] && subcategory.length === 1) {
     // subcategory page:
+
+    //if favorites page:
+    if (subcategory[0] == "favorites")
+      return (
+        <Container>
+          <ToolsList data={favoriteTools} subcategorySlug="favorites" />
+        </Container>
+      );
+
+    // else:
     categories.map((c) => {
       c.subcategories.map((subc) => {
         if (subc.slug === subcategory[0]) {
