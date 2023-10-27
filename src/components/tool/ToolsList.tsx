@@ -15,8 +15,10 @@ import Image from "next/image";
 // });
 
 // PROPS FOR NEW METHOD
+type ToolArray = Array<Tool & { subcategory: { title: string; slug: string } }>;
+type ToolWithAddons = Tool & { subcategory: { title: string; slug: string } };
 type ToolsListProps = {
-  data: Array<Tool & { subcategory: { title: string; slug: string } }>;
+  data: ToolArray;
   subcategorySlug: string;
 };
 
@@ -98,30 +100,35 @@ const ToolsList = ({ data, subcategorySlug }: ToolsListProps) => {
         className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 xl:grid-cols-3`}
       >
         {tools.map((tool) => {
-          return (
-            <Link
-              href={`/${tool.subcategory.slug}/${tool.id}`}
-              key={tool.id}
-              className={`flex w-full flex-row items-start  gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
-            >
-              {tool.logoUrl && (
-                <Image
-                  src={tool.logoUrl as string}
-                  height={40}
-                  width={40}
-                  alt="logo"
-                  className="-mt-[2px] mr-2 rounded-md border border-neutral-800"
-                />
-              )}
-              <section>
-                <h3 className="mb-[2px]">{tool.title}</h3>
-                <span className="text-neutral-400/70">{tool.description}</span>
-              </section>
-            </Link>
-          );
+          return <Tool tool={tool} key={tool.id} />;
         })}
       </div>
     </motion.div>
+  );
+};
+
+const Tool = ({ tool }: { tool: ToolWithAddons }) => {
+  return (
+    <Link
+      href={`/${tool.subcategory.slug}/${tool.id}`}
+      key={tool.id}
+      className={`flex w-full flex-row items-start  gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
+    >
+      {tool.logoUrl && (
+        <Image
+          src={tool.logoUrl as string}
+          height={40}
+          width={40}
+          alt="logo"
+          className="-mt-[2px] mr-2 rounded-md border border-neutral-800"
+        />
+      )}
+      <section>
+        <h3 className="mb-[2px]">{tool.title}</h3>
+        <span className="text-neutral-400/70">{tool.description}</span>
+      </section>
+      <button>like</button>
+    </Link>
   );
 };
 
