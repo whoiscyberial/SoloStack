@@ -1,3 +1,4 @@
+import { signIn, useSession } from "next-auth/react";
 import ToolPage from "@/components/tool/ToolPage";
 import ToolsList from "@/components/tool/ToolsList";
 import Container from "@/components/ui/Container";
@@ -10,6 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function Subcategory() {
+  const { data: sessionData } = useSession();
   const router = useRouter();
   const categories = useCategoriesStore((state) => state.categories);
   const setCategories = useCategoriesStore((state) => state.setCategories);
@@ -81,18 +83,34 @@ export default function Subcategory() {
     // subcategory page:
 
     //if favorites page:
-    if (subcategory[0] == "favorites")
-      return (
-        <Container>
-          <ToolsList data={favoriteTools} subcategorySlug="favorites" />
-        </Container>
-      );
+    if (subcategory[0] == "favorites") {
+      if (!sessionData) {
+        () => signIn();
+      } else {
+        const filteredTools = tools.filter((tool) => {
+          return (
+            tool.favorites.find((favorite) => {
+              console.log(favorite.id);
+              console.log(sessionData.user.id);
+              console.log(favorite.id === sessionData.user.id);
+              return favorite.id === sessionData.user.id;
+            }) != undefined
+          );
+        });
+        console.log("filtered tools: ", filteredTools);
+        return (
+          <Container>
+            <ToolsList data={filteredTools} subcategorySlug="favorites" />
+          </Container>
+        );
+      }
+    }
 
     // else:
-    categories.map((c) => {
-      c.subcategories.map((subc) => {
-        if (subc.slug === subcategory[0]) {
-          setActiveSubcategory(subc.id);
+    categories.map((categ) => {
+      categ.subcategories.map((subcateg) => {
+        if (subcateg.slug === subcategory[0]) {
+          setActiveSubcategory(subcateg.id);
         }
       });
     });

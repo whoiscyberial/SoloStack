@@ -5,6 +5,9 @@ import { type Tool } from "@prisma/client";
 import Switch from "../ui/Switch";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { api } from "@/utils/api";
+import useUserStore from "@/store/userStore";
+import notification from "../ui/notification";
 // import { type ToolSchema } from "./ToolForm";
 
 // PROPS FOR OLD METHOD
@@ -25,6 +28,12 @@ type ToolsListProps = {
 };
 
 const ToolsList = ({ data, subcategorySlug }: ToolsListProps) => {
+  const favoriteTools = useUserStore((state) => state.favoriteTools);
+  const favoriteIds: Array<number> = [];
+  favoriteTools.map((tool) => {
+    favoriteIds.push(tool.id);
+  });
+
   const [tools, setTools] =
     useState<Array<Tool & { subcategory: { title: string; slug: string } }>>(
       data,
@@ -38,6 +47,9 @@ const ToolsList = ({ data, subcategorySlug }: ToolsListProps) => {
           return value.verified === showVerifiedOnly;
         })
         .filter((value) => {
+          if (subcategorySlug === "favorites") {
+            return true;
+          }
           return value.subcategory.slug === subcategorySlug;
         }),
     );
@@ -102,14 +114,21 @@ const ToolsList = ({ data, subcategorySlug }: ToolsListProps) => {
         className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 xl:grid-cols-3`}
       >
         {tools.map((tool) => {
-          return <Tool tool={tool} key={tool.id} />;
+          return <Tool tool={tool} key={tool.id} favoriteIds={favoriteIds} />;
         })}
       </div>
     </motion.div>
   );
 };
 
-const Tool = ({ tool }: { tool: ToolWithAddons }) => {
+const Tool = ({
+  tool,
+  favoriteIds,
+}: {
+  tool: ToolWithAddons;
+  favoriteIds: Array<number>;
+}) => {
+  const [favoritesCount, setFavoritesCount] = useState(tool.favoritesCount);
   return (
     <Link
       href={`/${tool.subcategory.slug}/${tool.id}`}
@@ -132,18 +151,71 @@ const Tool = ({ tool }: { tool: ToolWithAddons }) => {
         </section>
       </section>
       <section className="flex items-center gap-2">
-        <button className="flex items-center justify-center">
-          <LikeIcon />
-        </button>
+        <Like
+          toolId={tool.id}
+          active={favoriteIds.includes(tool.id)}
+          setFavoritesCount={setFavoritesCount}
+          favoritesCount={favoritesCount}
+        />
         <span className="text-[0.9rem] font-medium text-neutral-600">
-          {tool.favoritesCount}
+          {favoritesCount}
         </span>
       </section>
     </Link>
   );
 };
 
-const LikeIcon = () => {
+const Like = ({
+  toolId,
+  active,
+  favoritesCount,
+  setFavoritesCount,
+}: {
+  toolId: number;
+  favoritesCount: number;
+  active: boolean;
+  setFavoritesCount: React.Dispatch<React.SetStateAction<number>>;
+}) => {
+  const [activeState, setActiveState] = useState(active);
+  // add to favorites:
+  const addToFavoritesMutation = api.user.addToFavorites.useMutation();
+  const addToFavorites = (id: number) => {
+    addToFavoritesMutation.mutate({ toolId: id });
+    setActiveState(true);
+    setFavoritesCount(favoritesCount + 1);
+  };
+
+  // delete from favorites:
+  const deleteFromFavoritesMutation =
+    api.user.deleteFromFavorites.useMutation();
+  const deleteFromFavorites = (id: number) => {
+    deleteFromFavoritesMutation.mutate({ toolId: id });
+    setActiveState(false);
+    setFavoritesCount(favoritesCount - 1);
+  };
+
+  return (
+    <button
+      className={`flex items-center justify-center`}
+      onClick={(e) => {
+        // add to favorites:
+        e.preventDefault();
+        if (
+          deleteFromFavoritesMutation.isLoading ||
+          addToFavoritesMutation.isLoading
+        ) {
+          notification("Too much requests. Please try again in 10 seconds.");
+        } else {
+          activeState ? deleteFromFavorites(toolId) : addToFavorites(toolId);
+        }
+      }}
+    >
+      <LikeIcon active={activeState} />
+    </button>
+  );
+};
+
+const LikeIcon = ({ active }: { active: boolean }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -151,11 +223,11 @@ const LikeIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="h-7 w-7 text-neutral-600 transition-all hover:text-neutral-200"
-      onClick={(e) => {
-        // add to favorites:
-        e.preventDefault();
-      }}
+      className={`${
+        active
+          ? "fill-red-800 stroke-red-800 hover:fill-red-700 hover:stroke-red-700"
+          : ""
+      } h-7 w-7 text-neutral-600 outline-none transition-all hover:text-neutral-200 focus:outline-none`}
     >
       <path
         strokeLinecap="round"

@@ -63,6 +63,11 @@ export const toolRouter = createTRPCRouter({
               slug: true,
             },
           },
+          favorites: {
+            select: {
+              id: true,
+            },
+          },
         },
 
         ...(input.sort === "newestFirst"

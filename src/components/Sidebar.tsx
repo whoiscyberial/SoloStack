@@ -105,8 +105,18 @@ const Sidebar = () => {
 
               <div className="grid grid-flow-row gap-y-4">
                 {sessionData && sessionData.user.role === "ADMIN" && (
-                  <Button className="text-left" href="/admin">
-                    Admin panel
+                  <Button
+                    className={`${
+                      activeSubcategory === -9234214241
+                        ? "cursor-default dark:bg-neutral-800 dark:text-neutral-500 hover:dark:bg-neutral-800 hover:dark:text-neutral-500"
+                        : ""
+                    } text-left`}
+                    href="/favorites"
+                    onClick={() => {
+                      setActiveSubcategory(-9234214241);
+                    }}
+                  >
+                    Favorites
                   </Button>
                 )}
                 <ToolFormButton className="text-left">
