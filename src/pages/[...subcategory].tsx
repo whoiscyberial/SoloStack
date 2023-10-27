@@ -17,7 +17,16 @@ export default function Subcategory() {
   );
 
   // FETCH ALL DATA METHOD (may be slow in future):
-  const { data: tools } = api.tool.getAll.useQuery({ sort: "mostLikedFirst" });
+  const { data: tools } = api.tool.getAll.useQuery(
+    { sort: "mostLikedFirst" },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      cacheTime: 24 * 60 * 60 * 1000,
+      staleTime: 24 * 60 * 60 * 1000,
+      retry: 1,
+    },
+  );
 
   const fetch = api.category.getAll.useQuery(undefined, {
     refetchOnWindowFocus: false,
@@ -43,6 +52,7 @@ export default function Subcategory() {
     subcategory.length === 2 &&
     typeof subcategory[1] != undefined
   ) {
+    // tool page:
     const slug = subcategory[0]!;
     const toolId = subcategory[1]!;
     return (
@@ -51,6 +61,7 @@ export default function Subcategory() {
       </Container>
     );
   } else if (subcategory[0] && subcategory.length === 1) {
+    // subcategory page:
     categories.map((c) => {
       c.subcategories.map((subc) => {
         if (subc.slug === subcategory[0]) {

@@ -2,6 +2,7 @@ import { toolRouter } from "@/server/api/routers/toolRouter";
 import { postRouter } from "@/server/api/routers/postRouter";
 import { categoryRouter } from "@/server/api/routers/categoryRouter";
 import { subcategoryRouter } from "@/server/api/routers/subcategoryRouter";
+import { userRouter } from "./routers/userRouter";
 
 import { createTRPCRouter } from "@/server/api/trpc";
 
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   category: categoryRouter,
   subcategory: subcategoryRouter,
+  user: userRouter,
 });
 
 // type definition of API
