@@ -112,23 +112,55 @@ const Tool = ({ tool }: { tool: ToolWithAddons }) => {
     <Link
       href={`/${tool.subcategory.slug}/${tool.id}`}
       key={tool.id}
-      className={`flex w-full flex-row items-start  gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
+      className={`flex w-full flex-row items-center justify-between gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
     >
-      {tool.logoUrl && (
-        <Image
-          src={tool.logoUrl as string}
-          height={40}
-          width={40}
-          alt="logo"
-          className="-mt-[2px] mr-2 rounded-md border border-neutral-800"
-        />
-      )}
-      <section>
-        <h3 className="mb-[2px]">{tool.title}</h3>
-        <span className="text-neutral-400/70">{tool.description}</span>
+      <section className="flex w-full flex-row gap-1">
+        {tool.logoUrl && (
+          <Image
+            src={tool.logoUrl as string}
+            height={40}
+            width={40}
+            alt="logo"
+            className="-mt-[2px] mr-2 rounded-md border border-neutral-800"
+          />
+        )}
+        <section>
+          <h3 className="mb-[2px]">{tool.title}</h3>
+          <span className="text-neutral-400/70">{tool.description}</span>
+        </section>
       </section>
-      <button>like</button>
+      <section className="flex items-center gap-2">
+        <button className="flex items-center justify-center">
+          <LikeIcon />
+        </button>
+        <span className="text-[0.9rem] font-medium text-neutral-600">
+          {tool.favoritesCount}
+        </span>
+      </section>
     </Link>
+  );
+};
+
+const LikeIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="h-7 w-7 text-neutral-600 transition-all hover:text-neutral-200"
+      onClick={(e) => {
+        // add to favorites:
+        e.preventDefault();
+      }}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+      />
+    </svg>
   );
 };
 
