@@ -15,7 +15,9 @@ import Image from "next/image";
 // });
 
 // PROPS FOR NEW METHOD
-type ToolArray = Array<Tool & { subcategory: { title: string; slug: string } }>;
+export type ToolArray = Array<
+  Tool & { subcategory: { title: string; slug: string } }
+>;
 type ToolWithAddons = Tool & { subcategory: { title: string; slug: string } };
 type ToolsListProps = {
   data: ToolArray;
