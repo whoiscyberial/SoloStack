@@ -32,8 +32,14 @@ const Sidebar = () => {
     }
   }, [isMobile]);
 
-  if (!categories) {
-    return;
+  if (!categories || categories.length === 0) {
+    return (
+      <div
+        className={`fixed left-0 top-0 z-10 h-full min-h-full w-[256px] overflow-y-auto border-r  border-neutral-800 bg-neutral-850 px-8 py-14 transition-all`}
+      >
+        {" "}
+      </div>
+    );
   }
 
   return (
