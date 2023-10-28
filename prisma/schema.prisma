@@ -23,20 +23,19 @@ model Post {
 }
 
 model Tool {
-  id             Int         @id @default(autoincrement())
-  title          String
-  description    String
-  text           String?
-  link           String
-  subcategory    Subcategory @relation(fields: [subcategoryId], references: [id])
-  subcategoryId  Int
-  creatorId      String
-  creator        User        @relation("creator", fields: [creatorId], references: [id])
-  favorites      User[]      @relation("favoriteTools")
-  favoritesCount Int         @default(0)
-  createdAt      DateTime    @default(now())
-  verified       Boolean     @default(false)
-  logoUrl        String?
+  id            Int         @id @default(autoincrement())
+  title         String
+  description   String
+  text          String?
+  link          String
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  subcategoryId Int
+  creatorId     String
+  creator       User        @relation("creator", fields: [creatorId], references: [id])
+  favorites     User[]      @relation("favoriteTools")
+  createdAt     DateTime    @default(now())
+  verified      Boolean     @default(false)
+  logoUrl       String?
 
   @@index([title, description])
 }
