@@ -1,44 +1,35 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { type Tool } from "@prisma/client";
+import { type Subcategory, type Tool } from "@prisma/client";
 import Switch from "../ui/Switch";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { api } from "@/utils/api";
-import useUserStore from "@/store/userStore";
 import notification from "../ui/notification";
-// import { type ToolSchema } from "./ToolForm";
+import useSidebarStore from "@/store/sidebarStore";
 
-// PROPS FOR OLD METHOD
-// const ToolsListPropsZod = z.object({
-//   subcategoryId: z.number().optional(),
-//   subcategorySlug: z.string().optional(),
-//   sort: z.enum(["newestFirst", "mostLikedFirst"] as const),
-// });
+export type ToolArray = Array<ToolWithAddons>;
 
-// PROPS FOR NEW METHOD
-export type ToolArray = Array<
-  Tool & { subcategory: { title: string; slug: string } }
->;
-type ToolWithAddons = Tool & { subcategory: { title: string; slug: string } };
+type ToolWithAddons = Tool & {
+  subcategory: { title: string; slug: string };
+  favorites: Array<{ id: string }>;
+};
 type ToolsListProps = {
   data: ToolArray;
-  subcategorySlug: string;
+  subcategory: Subcategory;
 };
 
-const ToolsList = ({ data, subcategorySlug }: ToolsListProps) => {
-  const favoriteTools = useUserStore((state) => state.favoriteTools);
-  const favoriteIds: Array<number> = [];
-  favoriteTools.map((tool) => {
-    favoriteIds.push(tool.id);
-  });
-
-  const [tools, setTools] =
-    useState<Array<Tool & { subcategory: { title: string; slug: string } }>>(
-      data,
-    );
+const ToolsList = ({ data, subcategory }: ToolsListProps) => {
+  const [tools, setTools] = useState<Array<ToolWithAddons>>(data);
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(true);
+  const setActiveSubcategory = useSidebarStore(
+    (state) => state.setActiveSubcategory,
+  );
+
+  useEffect(() => {
+    setActiveSubcategory(subcategory.id);
+  }, []);
 
   useEffect(() => {
     setTools(
@@ -47,49 +38,14 @@ const ToolsList = ({ data, subcategorySlug }: ToolsListProps) => {
           return value.verified === showVerifiedOnly;
         })
         .filter((value) => {
-          if (subcategorySlug === "favorites") {
+          if (subcategory.slug === "favorites") {
             return true;
           }
-          return value.subcategory.slug === subcategorySlug;
+          return value.subcategory.slug === subcategory.slug;
         }),
     );
-  }, [showVerifiedOnly, subcategorySlug]);
+  }, [showVerifiedOnly, subcategory]);
 
-  // OLD METHOD TO FETCH DATA (ONE BY ONE SUBCATEGORY)
-  // const fetchTools = api.tool.getBySubcategory.useQuery(
-  //   {
-  //     ...(subcategoryId ? { subcategoryId: subcategoryId } : null),
-  //     ...(subcategorySlug ? { slug: subcategorySlug } : null),
-  //     sort: sort,
-  //   },
-  //   {
-  //     refetchOnWindowFocus: false,
-  //     refetchOnMount: false,
-  //     cacheTime: 1 * 60 * 60 * 1000,
-  //     staleTime: 1 * 60 * 60 * 1000,
-  //     retry: 1,
-  //   },
-  // );
-
-  // useEffect(() => {
-  //   if (fetchTools.data) {
-  //     setTools(
-  //       fetchTools.data.filter((value) => {
-  //         return value.verified === showVerifiedOnly;
-  //       }),
-  //     );
-  //   }
-  // }, [showVerifiedOnly, subcategorySlug, subcategoryId, fetchTools.isSuccess]);
-
-  // if (!fetchTools.data) {
-  //   return <LoadingSpinner />;
-  // }
-
-  // if (fetchTools.data.length === 0) {
-  //   return <p>No tools in this subcategory</p>;
-  // }
-
-  const { data: sessionData } = useSession();
   return (
     <motion.div
       key={tools[0]?.subcategory.slug}
@@ -100,49 +56,56 @@ const ToolsList = ({ data, subcategorySlug }: ToolsListProps) => {
       className="flex w-full max-w-[1280px] flex-col justify-center"
     >
       <div className="mb-8 w-full lg:mb-12">
-        <h2>{tools[0]?.subcategory.title}</h2>
-        {sessionData?.user.role === "ADMIN" && (
-          <Switch
-            className="mt-4"
-            state={showVerifiedOnly}
-            setState={setShowVerifiedOnly}
-            message="Show not verified tools"
-          />
+        <h2>{subcategory.title}</h2>
+        <Switch
+          className="mt-4"
+          state={showVerifiedOnly}
+          setState={setShowVerifiedOnly}
+          firstMessage="Verified"
+          secondMessage="Unverified"
+        />
+        {showVerifiedOnly ? null : (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-2 text-justify font-mono text-red-500"
+          >
+            If you decide to use unverified tools, it becomes crucial to rely on
+            your risk detection skills. If tool is paid or it requires your
+            data, then carefully analyze the tool
+            {"'"}s origin, user reviews, and any available information.
+          </motion.p>
         )}
       </div>
       <div
         className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 xl:grid-cols-3`}
       >
         {tools.map((tool) => {
-          return <Tool tool={tool} key={tool.id} favoriteIds={favoriteIds} />;
+          return <Tool tool={tool} key={tool.id} />;
         })}
       </div>
     </motion.div>
   );
 };
 
-const Tool = ({
-  tool,
-  favoriteIds,
-}: {
-  tool: ToolWithAddons;
-  favoriteIds: Array<number>;
-}) => {
-  const [favoritesCount, setFavoritesCount] = useState(tool.favoritesCount);
+const Tool = ({ tool }: { tool: ToolWithAddons }) => {
+  const { data: sessionData } = useSession();
+  const [favoritesCount, setFavoritesCount] = useState(tool.favorites.length);
   return (
     <Link
       href={`/${tool.subcategory.slug}/${tool.id}`}
       key={tool.id}
       className={`flex w-full flex-row items-center justify-between gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
     >
-      <section className="flex w-full flex-row gap-1">
+      <section className="flex w-full flex-row items-center gap-1">
         {tool.logoUrl && (
           <Image
             src={tool.logoUrl as string}
             height={40}
             width={40}
-            alt="logo"
-            className="-mt-[2px] mr-2 rounded-md border border-neutral-800"
+            alt={`${tool.title}'s logotype`}
+            style={{ objectFit: "cover" }}
+            className="-mt-[2px] mr-2 h-[40px] w-[40px] rounded-md border border-neutral-800"
           />
         )}
         <section>
@@ -153,7 +116,13 @@ const Tool = ({
       <section className="flex items-center gap-2">
         <Like
           toolId={tool.id}
-          active={favoriteIds.includes(tool.id)}
+          active={
+            sessionData
+              ? tool.favorites.find((elem) => {
+                  return elem.id === sessionData.user.id;
+                }) != undefined
+              : false
+          }
           setFavoritesCount={setFavoritesCount}
           favoritesCount={favoritesCount}
         />
@@ -194,17 +163,21 @@ const Like = ({
     setFavoritesCount(favoritesCount - 1);
   };
 
+  const { data: sessionData } = useSession();
+
   return (
     <button
       className={`flex items-center justify-center`}
       onClick={(e) => {
         // add to favorites:
         e.preventDefault();
-        if (
+        if (!sessionData) {
+          notification("You are not logged in.");
+        } else if (
           deleteFromFavoritesMutation.isLoading ||
           addToFavoritesMutation.isLoading
         ) {
-          notification("Too much requests. Please try again in 10 seconds.");
+          notification("You are clicking too fast..");
         } else {
           activeState ? deleteFromFavorites(toolId) : addToFavorites(toolId);
         }

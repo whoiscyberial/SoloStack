@@ -7,6 +7,7 @@ import useCategoriesStore from "@/store/categoriesStore";
 import useSidebarStore from "@/store/sidebarStore";
 import { useSession } from "next-auth/react";
 import { useWindowSize } from "@uidotdev/usehooks";
+import notification from "./ui/notification";
 
 const Sidebar = () => {
   const categories = useCategoriesStore((state) => state.categories);
@@ -15,7 +16,6 @@ const Sidebar = () => {
     (state) => state.setActiveSubcategory,
   );
   const { data: sessionData } = useSession();
-
   const [showSidebar, setShowSidebar] = useState(true);
   const wSize = useWindowSize();
   const isMobile = wSize
@@ -104,21 +104,23 @@ const Sidebar = () => {
               })}
 
               <div className="grid grid-flow-row gap-y-4">
-                {sessionData && sessionData.user.role === "ADMIN" && (
-                  <Button
-                    className={`${
-                      activeSubcategory === -9234214241
-                        ? "cursor-default dark:bg-neutral-800 dark:text-neutral-500 hover:dark:bg-neutral-800 hover:dark:text-neutral-500"
-                        : ""
-                    } text-left`}
-                    href="/favorites"
-                    onClick={() => {
+                <Button
+                  className={`${
+                    activeSubcategory === -9234214241
+                      ? "cursor-default dark:bg-neutral-800 dark:text-neutral-500 hover:dark:bg-neutral-800 hover:dark:text-neutral-500"
+                      : ""
+                  } text-left`}
+                  href="/favorites"
+                  onClick={() => {
+                    if (!sessionData) {
+                      notification("You are not logged in");
+                    } else {
                       setActiveSubcategory(-9234214241);
-                    }}
-                  >
-                    Favorites
-                  </Button>
-                )}
+                    }
+                  }}
+                >
+                  Favorites
+                </Button>
                 <ToolFormButton className="text-left">
                   Add your tool
                 </ToolFormButton>

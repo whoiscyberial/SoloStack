@@ -4,20 +4,16 @@ import ToolsList from "@/components/tool/ToolsList";
 import Container from "@/components/ui/Container";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
 import useCategoriesStore from "@/store/categoriesStore";
-import useSidebarStore from "@/store/sidebarStore";
-import useUserStore from "@/store/userStore";
 import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { type Subcategory } from "@prisma/client";
 
 export default function Subcategory() {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const categories = useCategoriesStore((state) => state.categories);
   const setCategories = useCategoriesStore((state) => state.setCategories);
-  const setActiveSubcategory = useSidebarStore(
-    (state) => state.setActiveSubcategory,
-  );
 
   // FETCH ALL DATA METHOD (may be slow in future):
   const { data: tools } = api.tool.getAll.useQuery(
@@ -31,23 +27,7 @@ export default function Subcategory() {
     },
   );
 
-  // fetch favorite tools of user
-  const favoriteToolsFetch = api.user.getFavorites.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    cacheTime: 24 * 60 * 60 * 1000,
-    staleTime: 24 * 60 * 60 * 1000,
-    retry: 1,
-  });
-  const favoriteTools = favoriteToolsFetch?.data?.favoriteTools;
-  const setFavoriteTools = useUserStore((state) => state.setFavoriteTools);
-  useEffect(() => {
-    if (favoriteToolsFetch.data) {
-      setFavoriteTools(favoriteToolsFetch.data.favoriteTools!);
-    }
-  }, [favoriteToolsFetch.isSuccess]);
-
-  // fetch categories for sidebar
+  // fetch categories for sidebar and set them to update sidebar
   const categoryFetch = api.category.getAll.useQuery(undefined, {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -56,11 +36,13 @@ export default function Subcategory() {
     retry: 1,
   });
   useEffect(() => {
-    setCategories(categoryFetch.data!);
+    if (categoryFetch.isSuccess) {
+      setCategories(categoryFetch.data!);
+    }
   }, [categoryFetch.isSuccess]);
 
   const { subcategory } = router.query;
-  if (!subcategory || !categories || !tools || !favoriteTools) {
+  if (!subcategory || !categories || !tools) {
     return (
       <Container>
         <LoadingOverlay />
@@ -80,8 +62,7 @@ export default function Subcategory() {
       </Container>
     );
   } else if (subcategory[0] && subcategory.length === 1) {
-    // subcategory page:
-
+    // subcategory pages:
     //if favorites page:
     if (subcategory[0] == "favorites") {
       if (!sessionData) {
@@ -90,36 +71,49 @@ export default function Subcategory() {
         const filteredTools = tools.filter((tool) => {
           return (
             tool.favorites.find((favorite) => {
-              console.log(favorite.id);
-              console.log(sessionData.user.id);
-              console.log(favorite.id === sessionData.user.id);
               return favorite.id === sessionData.user.id;
             }) != undefined
           );
         });
-        console.log("filtered tools: ", filteredTools);
         return (
           <Container>
-            <ToolsList data={filteredTools} subcategorySlug="favorites" />
+            <ToolsList
+              data={filteredTools}
+              subcategory={{
+                title: "Favorites",
+                categoryId: -9234214241,
+                id: -9234214241,
+                slug: "favorites",
+              }}
+            />
           </Container>
         );
       }
-    }
-
-    // else:
-    categories.map((categ) => {
-      categ.subcategories.map((subcateg) => {
-        if (subcateg.slug === subcategory[0]) {
-          setActiveSubcategory(subcateg.id);
-        }
+    } else {
+      let querySubcategory: Subcategory | undefined = undefined;
+      categories.find((categ) => {
+        categ.subcategories.find((subcateg) => {
+          if (subcateg.slug === subcategory[0]) {
+            querySubcategory = subcateg;
+            return true;
+          }
+        });
       });
-    });
 
-    // PASSING ALL TOOLS TO EACH PAGE (may be slow in future)
-    return (
-      <Container>
-        <ToolsList subcategorySlug={subcategory[0]} data={tools} />
-      </Container>
-    );
+      if (!querySubcategory) {
+        return (
+          <Container>
+            <p>No such subcategory</p>
+          </Container>
+        );
+      }
+
+      // PASSING ALL TOOLS TO EACH PAGE (may be slow in future)
+      return (
+        <Container>
+          <ToolsList subcategory={querySubcategory} data={tools} />
+        </Container>
+      );
+    }
   }
 }

@@ -1,7 +1,6 @@
 import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import React from "react";
-import LoadingSpinner from "../ui/LoadingSpinner";
 import Button from "../ui/Button";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -9,6 +8,7 @@ import { TRPCError } from "@trpc/server";
 import EditToolButton from "./EditToolButton";
 import { type ToolSchema } from "./ToolForm";
 import DeleteToolButton from "./DeleteToolButton";
+import LoadingOverlay from "../ui/LoadingOverlay";
 
 type ToolPage = {
   subcategorySlug: string;
@@ -29,7 +29,7 @@ const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
   );
 
   if (!fetchTool.data) {
-    return <LoadingSpinner />;
+    return <LoadingOverlay />;
   }
 
   if (fetchTool.data.verified === false && sessionData?.user.role != "ADMIN") {
@@ -50,7 +50,7 @@ const ToolPage = ({ subcategorySlug, toolId }: ToolPage) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex min-w-[360px] max-w-[640px] flex-col"
+      className="my-auto flex min-w-[360px] max-w-[640px] flex-col"
     >
       <Link
         href={`/${subcategorySlug}`}

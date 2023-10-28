@@ -306,7 +306,14 @@ const ToolForm = () => {
             </div>
 
             <div className="mb- text-center">
-              <Button className="w-full" onClick={() => close()}>
+              <Button
+                type="button"
+                className="w-full"
+                onClick={(e) => {
+                  e.preventDefault();
+                  close();
+                }}
+              >
                 Close
               </Button>
             </div>
