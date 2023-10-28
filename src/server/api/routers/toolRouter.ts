@@ -80,7 +80,7 @@ export const toolRouter = createTRPCRouter({
         ...(input.sort === "mostLikedFirst"
           ? {
               orderBy: {
-                favoritesCount: "desc",
+                favorites: { _count: "desc" },
               },
             }
           : null),
@@ -147,7 +147,7 @@ export const toolRouter = createTRPCRouter({
         ...(input.sort === "mostLikedFirst"
           ? {
               orderBy: {
-                favoritesCount: "desc",
+                favorites: { _count: "desc" },
               },
             }
           : null),
