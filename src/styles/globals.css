@@ -47,6 +47,10 @@ optgroup {
   @apply bg-neutral-300/50;
 }
 
+html {
+  @apply bg-neutral-900;
+}
+
 body {
   font-size: 14px;
   font-weight: 400;

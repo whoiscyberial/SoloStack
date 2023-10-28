@@ -26,7 +26,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`${inter.className} flex min-h-screen w-screen flex-col items-center justify-center bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-200`}
+            className={`${inter.className} flex min-h-screen w-screen flex-col items-center justify-center bg-neutral-900 text-neutral-200`}
           >
             <Component {...pageProps} />
             <Toaster position="bottom-left" reverseOrder={false} />

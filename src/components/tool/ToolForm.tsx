@@ -158,12 +158,12 @@ const ToolForm = () => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="z-20 mb-4 flex h-fit w-screen flex-col rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:absolute md:left-[50%] md:top-[50%] md:h-auto md:w-[70vw] md:translate-x-[-50%] md:translate-y-[-50%] lg:w-[70vw] xl:w-[50vw]"
+            className="z-20 mb-4 flex h-fit min-h-screen w-screen flex-col rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:absolute md:left-[50%] md:top-[50%] md:h-auto md:min-h-fit md:w-[70vw] md:translate-x-[-50%] md:translate-y-[-50%] lg:w-[70vw] xl:w-[50vw]"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="mb-4">
               <label className="mb-2 block font-semibold" htmlFor="title">
-                Name of your tool
+                Title
               </label>
               <input
                 className={`w-full border px-3 py-2 text-sm leading-tight ${
@@ -284,7 +284,7 @@ const ToolForm = () => {
               htmlFor="logo-upload"
               className="mb-4 flex w-full items-center justify-center border-2 border-dashed border-neutral-700 py-8 text-neutral-600 transition-all hover:cursor-pointer hover:bg-neutral-800 hover:text-neutral-200"
             >
-              {logo?.name ? logo.name : "Logotype (optional)"}
+              {logo?.name ? logo.name : "Logotype 1:1 (optional)"}
             </label>
             <input
               id="logo-upload"
@@ -305,7 +305,7 @@ const ToolForm = () => {
               </Button>
             </div>
 
-            <div className="mb- text-center">
+            <div className="-mt-3 text-center">
               <Button
                 type="button"
                 className="w-full"
@@ -314,7 +314,7 @@ const ToolForm = () => {
                   close();
                 }}
               >
-                Close
+                Cancel
               </Button>
             </div>
           </form>
