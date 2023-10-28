@@ -1,4 +1,4 @@
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import ToolPage from "@/components/tool/ToolPage";
 import ToolsList from "@/components/tool/ToolsList";
 import Container from "@/components/ui/Container";
@@ -8,6 +8,7 @@ import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { type Subcategory } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export default function Subcategory() {
   const { data: sessionData } = useSession();
@@ -66,7 +67,7 @@ export default function Subcategory() {
     //if favorites page:
     if (subcategory[0] == "favorites") {
       if (!sessionData) {
-        () => signIn();
+        redirect("/auth/signin");
       } else {
         const filteredTools = tools.filter((tool) => {
           return (

@@ -116,7 +116,7 @@ const Sidebar = () => {
                       ? "cursor-default dark:bg-neutral-800 dark:text-neutral-500 hover:dark:bg-neutral-800 hover:dark:text-neutral-500"
                       : ""
                   } text-left`}
-                  href="/favorites"
+                  href={`${sessionData ? "/favorites" : "/auth/signin"}`}
                   onClick={() => {
                     if (!sessionData) {
                       notification("You are not logged in");
