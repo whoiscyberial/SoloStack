@@ -64,6 +64,8 @@ export default function Subcategory() {
     );
   } else if (subcategory[0] && subcategory.length === 1) {
     // subcategory pages:
+    // if tools page (index page):
+
     //if favorites page:
     if (subcategory[0] == "favorites") {
       if (!sessionData) {

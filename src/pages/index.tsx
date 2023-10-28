@@ -1,8 +1,17 @@
 import Button from "@/components/ui/Button";
+import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import Head from "next/head";
 
 export default function Home() {
+  const { data: subcategories } = api.subcategory.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    cacheTime: 1 * 60 * 60 * 1000,
+    staleTime: 1 * 60 * 60 * 1000,
+    retry: 1,
+  });
+
   return (
     <>
       <Head>
@@ -48,7 +57,17 @@ export default function Home() {
             <br /> Explore the website, contribute your favorite tools, and
             improve the way you work.
           </p>
-          <Button className="mt-8" href="/no-code-tools">
+          <Button
+            className={`${subcategories ? "" : "cursor-wait"} mt-8`}
+            href={`/${
+              subcategories && subcategories[0] ? subcategories[0].slug : ""
+            }`}
+            onClick={(e) => {
+              if (!subcategories) {
+                e.preventDefault();
+              }
+            }}
+          >
             Browse tools
           </Button>
         </motion.section>
