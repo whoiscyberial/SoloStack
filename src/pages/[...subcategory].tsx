@@ -43,7 +43,7 @@ export default function Subcategory() {
   }, [categoryFetch.isSuccess]);
 
   const { subcategory } = router.query;
-  if (!subcategory || !categories || !tools) {
+  if (!subcategory || !categories || tools === undefined) {
     return (
       <Container>
         <LoadingOverlay />
