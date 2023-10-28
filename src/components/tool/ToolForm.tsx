@@ -158,7 +158,7 @@ const ToolForm = () => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="z-20 mb-4 flex h-full w-screen flex-col rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:absolute md:left-[50%] md:top-[50%] md:h-auto md:w-[70vw] md:translate-x-[-50%] md:translate-y-[-50%] lg:w-[70vw] xl:w-[50vw]"
+            className="z-20 mb-4 flex h-fit w-screen flex-col rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:absolute md:left-[50%] md:top-[50%] md:h-auto md:w-[70vw] md:translate-x-[-50%] md:translate-y-[-50%] lg:w-[70vw] xl:w-[50vw]"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="mb-4">
