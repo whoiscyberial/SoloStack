@@ -116,15 +116,22 @@ const Tool = ({ tool }: { tool: ToolWithAddons }) => {
             width={40}
             alt={`${tool.title}'s logotype`}
             style={{ objectFit: "cover" }}
-            className="-mt-[2px] mr-2 h-[40px] w-[40px] rounded-md border border-neutral-800"
+            className={`-mt-[2px] mr-2 h-[42px] w-[42px] rounded-md ${
+              tool.logoUrl.split("&")[0]?.split(".").includes("png")
+                ? "bg-neutral-950"
+                : "border border-neutral-800 bg-neutral-850"
+            }`}
           />
         )}
         <section>
           <h3 className="mb-[2px]">{tool.title}</h3>
-          <span className="text-neutral-400/70">{tool.description}</span>
+          <span className="text-neutral-400/70">{tool.description} </span>
         </section>
       </section>
       <section className="flex items-center gap-2">
+        <span className="text-[0.8rem] font-medium text-neutral-600">
+          {favoritesCount}
+        </span>
         <Like
           toolId={tool.id}
           active={
@@ -137,9 +144,6 @@ const Tool = ({ tool }: { tool: ToolWithAddons }) => {
           setFavoritesCount={setFavoritesCount}
           favoritesCount={favoritesCount}
         />
-        <span className="text-[0.9rem] font-medium text-neutral-600">
-          {favoritesCount}
-        </span>
       </section>
     </Link>
   );
