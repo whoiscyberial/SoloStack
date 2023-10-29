@@ -1,17 +1,12 @@
 import Button from "@/components/ui/Button";
-import { api } from "@/utils/api";
+import { db } from "@/server/db";
 import { motion } from "framer-motion";
+import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
-export default function Home() {
-  const { data: subcategories } = api.subcategory.getAll.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    cacheTime: 1 * 60 * 60 * 1000,
-    staleTime: 1 * 60 * 60 * 1000,
-    retry: 1,
-  });
-
+export default function Home({
+  subcategories,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
@@ -61,20 +56,26 @@ export default function Home() {
             improve the way you work.
           </p>
           <Button
-            className={`${subcategories ? "" : "cursor-wait"} mt-8`}
-            href={`/${
-              subcategories && subcategories[0] ? subcategories[0].slug : ""
-            }`}
-            onClick={(e) => {
-              if (!subcategories) {
-                e.preventDefault();
-              }
-            }}
+            className={`${subcategories[0] ? "" : "cursor-not-allowed"} mt-8`}
+            href={`/${subcategories[0] ? subcategories[0].slug : ""}`}
           >
-            Browse tools
+            {subcategories[0]
+              ? "Browse tools"
+              : "Website is currently not working"}
           </Button>
         </motion.section>
       </main>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const req = await db.subcategory.findMany();
+  const subcategories: typeof req = JSON.parse(
+    JSON.stringify(req),
+  ) as typeof req;
+
+  return {
+    props: { subcategories },
+  };
 }
