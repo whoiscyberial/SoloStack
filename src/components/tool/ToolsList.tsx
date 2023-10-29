@@ -88,7 +88,7 @@ const ToolsList = ({ data, subcategory }: ToolsListProps) => {
           )}
         </div>
         <div
-          className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 xl:grid-cols-3`}
+          className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 2xl:grid-cols-3`}
         >
           {tools.map((tool) => {
             return <Tool tool={tool} key={tool.id} />;
