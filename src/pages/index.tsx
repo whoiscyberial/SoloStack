@@ -16,7 +16,10 @@ export default function Home() {
     <>
       <Head>
         <title>Solostack</title>
-        <meta name="description" content="Tools for indie-hackers" />
+        <meta
+          name="description"
+          content="Community-driven catalog of tools for indie hackers, startups, and business owners"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen w-full max-w-lg flex-col justify-center px-10 pb-24 pt-24">

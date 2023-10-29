@@ -8,6 +8,7 @@ import Image from "next/image";
 import { api } from "@/utils/api";
 import notification from "../ui/notification";
 import useSidebarStore from "@/store/sidebarStore";
+import Head from "next/head";
 
 export type ToolArray = Array<ToolWithAddons>;
 
@@ -47,44 +48,54 @@ const ToolsList = ({ data, subcategory }: ToolsListProps) => {
   }, [showVerifiedOnly, subcategory]);
 
   return (
-    <motion.div
-      key={tools[0]?.subcategory.slug}
-      initial={{ opacity: 0, translateY: 30 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      exit={{ opacity: 0, translateY: -30 }}
-      transition={{ duration: 0.7 }}
-      className="flex w-full max-w-[1280px] flex-col justify-center"
-    >
-      <div className="mb-8 w-full lg:mb-12">
-        <h2>{subcategory.title}</h2>
-        <Switch
-          className="mt-4"
-          state={showVerifiedOnly}
-          setState={setShowVerifiedOnly}
-          firstMessage="Verified"
-          secondMessage="Unverified"
+    <>
+      <Head>
+        <title>{`${subcategory.title} | Solostack`}</title>
+        <meta
+          name="description"
+          content={`Free list of tools that will help indie hackers, startups, and business owners with ${subcategory.title}`}
         />
-        {showVerifiedOnly ? null : (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-2 text-justify font-mono text-red-500"
-          >
-            If you decide to use unverified tools, it becomes crucial to rely on
-            your risk detection skills. If tool is paid or it requires your
-            data, then carefully analyze the tool
-            {"'"}s origin, user reviews, and any available information.
-          </motion.p>
-        )}
-      </div>
-      <div
-        className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 xl:grid-cols-3`}
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <motion.div
+        key={tools[0]?.subcategory.slug}
+        initial={{ opacity: 0, translateY: 30 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        exit={{ opacity: 0, translateY: -30 }}
+        transition={{ duration: 0.7 }}
+        className="flex w-full max-w-[1280px] flex-col justify-center"
       >
-        {tools.map((tool) => {
-          return <Tool tool={tool} key={tool.id} />;
-        })}
-      </div>
-    </motion.div>
+        <div className="mb-8 w-full lg:mb-12">
+          <h2>{subcategory.title}</h2>
+          <Switch
+            className="mt-4"
+            state={showVerifiedOnly}
+            setState={setShowVerifiedOnly}
+            firstMessage="Verified"
+            secondMessage="Unverified"
+          />
+          {showVerifiedOnly ? null : (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-2 text-justify font-mono text-red-500"
+            >
+              If you decide to use unverified tools, it becomes crucial to rely
+              on your risk detection skills. If tool is paid or it requires your
+              data, then carefully analyze the tool
+              {"'"}s origin, user reviews, and any available information.
+            </motion.p>
+          )}
+        </div>
+        <div
+          className={`grid w-full max-w-[1280px] grid-cols-1 gap-x-2  gap-y-4 md:gap-y-0 lg:grid-cols-2 xl:grid-cols-3`}
+        >
+          {tools.map((tool) => {
+            return <Tool tool={tool} key={tool.id} />;
+          })}
+        </div>
+      </motion.div>
+    </>
   );
 };
 
