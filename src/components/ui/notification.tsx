@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 
 const notification = (message: string) => {
   return toast(message, {
+    id: "toast",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
