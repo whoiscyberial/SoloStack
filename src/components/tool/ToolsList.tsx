@@ -58,7 +58,7 @@ const ToolsList = ({ data, subcategory }: ToolsListProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <motion.div
-        key={tools[0]?.subcategory.slug}
+        key={subcategory.id}
         initial={{ opacity: 0, translateY: 30 }}
         animate={{ opacity: 1, translateY: 0 }}
         exit={{ opacity: 0, translateY: -30 }}
