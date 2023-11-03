@@ -9,6 +9,8 @@ import { api } from "@/utils/api";
 import notification from "../ui/notification";
 import useSidebarStore from "@/store/sidebarStore";
 import Head from "next/head";
+import DeleteToolButton from "./DeleteToolButton";
+import EditToolButton from "./EditToolButton";
 
 export type ToolArray = Array<ToolWithAddons>;
 
@@ -108,7 +110,7 @@ const Tool = ({ tool }: { tool: ToolWithAddons }) => {
       target="_blank"
       href={tool.link}
       key={tool.id}
-      className={`flex w-full flex-row items-center justify-between gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
+      className={`flex w-full flex-row items-center justify-between gap-1 border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
     >
       <section className="flex w-full flex-row items-center gap-1">
         {tool.logoUrl && (
@@ -146,6 +148,16 @@ const Tool = ({ tool }: { tool: ToolWithAddons }) => {
           setFavoritesCount={setFavoritesCount}
           favoritesCount={favoritesCount}
         />
+        <EditToolButton
+          tool={{
+            title: tool.title,
+            description: tool.description,
+            id: tool.id,
+            link: tool.link,
+            subcategoryId: tool.subcategoryId.toString(),
+          }}
+        />
+        <DeleteToolButton toolId={tool.id} />
       </section>
     </Link>
   );
