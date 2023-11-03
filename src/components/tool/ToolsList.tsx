@@ -104,7 +104,9 @@ const Tool = ({ tool }: { tool: ToolWithAddons }) => {
   const [favoritesCount, setFavoritesCount] = useState(tool.favorites.length);
   return (
     <Link
-      href={`/${tool.subcategory.slug}/${tool.id}`}
+      rel="noopener noreferrer"
+      target="_blank"
+      href={tool.link}
       key={tool.id}
       className={`flex w-full flex-row items-center justify-between gap-1  border-b border-neutral-800 px-4 py-3 text-start transition-all hover:bg-neutral-800 md:rounded-md md:border-b md:border-transparent md:py-2`}
     >

@@ -11,22 +11,10 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  text      String
-  authorId  String
-  author    User     @relation("author", fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
-
-  @@index([title, text])
-}
-
 model Tool {
   id            Int         @id @default(autoincrement())
   title         String
   description   String
-  text          String?
   link          String
   subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
   subcategoryId Int
@@ -63,6 +51,7 @@ enum Role {
   FREE_USER
   PAID_USER
   ADMIN
+  BANNED
 }
 
 model User {
@@ -73,7 +62,6 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  posts         Post[]    @relation("author")
   tools         Tool[]    @relation("creator")
   favoriteTools Tool[]    @relation("favoriteTools")
   role          Role      @default(FREE_USER)

@@ -16,7 +16,6 @@ const Tool = z.object({
     .string()
     .min(3, { message: "Description is required" })
     .max(9 * 6, { message: "Description is too long" }),
-  text: z.string().optional(),
   subcategoryId: z.number().min(1, { message: "Please choose a Subcategory" }),
   link: z.string().url({ message: "Please provide a full link to tool" }),
   creatorId: z.string(),
@@ -29,6 +28,9 @@ const TOOL_VERIFICATION = ["VERIFIED", "NOT_VERIFIED"] as const;
 
 export const toolRouter = createTRPCRouter({
   create: protectedProcedure.input(Tool).mutation(async ({ ctx, input }) => {
+    if (ctx.session.user.role == "BANNED") {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
     if (ctx.session.user.role != "ADMIN") {
       const { success } = await createRateLimiter.limit(ctx.session.user.id);
       if (!success) {

@@ -21,7 +21,6 @@ const validationSchema = z.object({
     .string()
     .min(3, { message: "Description is required" })
     .max(9 * 6, { message: "Description is too long" }),
-  text: z.string().optional(),
   subcategoryId: z.string().min(1, { message: "Please choose a Subcategory" }),
   link: z.string().url({ message: "Please provide a full link to tool" }),
   verified: z.boolean().optional(),
@@ -119,7 +118,6 @@ const ToolForm = () => {
         id: initValue.id,
         title: data.title,
         description: data.description,
-        text: data.text,
         link: data.link,
         subcategoryId: parseInt(data.subcategoryId),
         creatorId: sessionData.user.id,
@@ -132,7 +130,6 @@ const ToolForm = () => {
       createTool.mutate({
         title: data.title,
         description: data.description,
-        text: data.text,
         link: data.link,
         subcategoryId: parseInt(data.subcategoryId),
         creatorId: sessionData.user.id,
@@ -158,10 +155,10 @@ const ToolForm = () => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="z-20 mb-4 flex h-fit min-h-screen w-screen flex-col rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:absolute md:left-[50%] md:top-[50%] md:h-auto md:min-h-fit md:w-[70vw] md:translate-x-[-50%] md:translate-y-[-50%] lg:w-[70vw] xl:w-[50vw]"
+            className="z-20 mb-4 flex h-fit min-h-screen w-screen flex-col gap-5 rounded-md border border-neutral-800/30 px-8 pb-8 pt-6 dark:bg-neutral-900 md:absolute md:left-[50%] md:top-[50%] md:h-auto md:min-h-fit md:w-[70vw] md:translate-x-[-50%] md:translate-y-[-50%] lg:w-[70vw] xl:w-[50vw]"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="mb-4">
+            <div className="">
               <label className="mb-2 block font-semibold" htmlFor="title">
                 Title
               </label>
@@ -181,7 +178,7 @@ const ToolForm = () => {
               )}
             </div>
 
-            <div className="mb-4 w-full">
+            <div className="w-full">
               <label
                 className="mb-2 block font-semibold"
                 htmlFor="subcategoryId"
@@ -217,7 +214,7 @@ const ToolForm = () => {
               )}
             </div>
 
-            <div className="mb-4">
+            <div className="">
               <label className="mb-2 block font-semibold" htmlFor="description">
                 Short description
               </label>
@@ -237,7 +234,7 @@ const ToolForm = () => {
               )}
             </div>
 
-            <div className="mb-4">
+            <div className="">
               <label className="mb-2 block font-semibold" htmlFor="link">
                 Link
               </label>
@@ -257,32 +254,9 @@ const ToolForm = () => {
               )}
             </div>
 
-            <div className="mb-4">
-              <label className="mb-2 block font-semibold" htmlFor="text">
-                A few paragraphs about it{" "}
-                <span className="ml-1 font-normal text-neutral-500">
-                  (optional)
-                </span>
-              </label>
-              <textarea
-                className={`w-full border px-3 py-2 text-sm leading-tight  ${
-                  errors.text && "border-red-500"
-                } focus:shadow-outline appearance-none rounded focus:outline-none`}
-                id="text"
-                placeholder="Outseta is a membership SaaS platform that lets you connect your frontend with it and turn it into a membership website."
-                rows={14}
-                {...register("text")}
-              />
-              {errors.text && (
-                <p className="mt-2 text-xs italic text-red-500">
-                  {errors.text?.message}
-                </p>
-              )}
-            </div>
-
             <label
               htmlFor="logo-upload"
-              className="mb-4 flex w-full items-center justify-center border-2 border-dashed border-neutral-700 py-8 text-neutral-600 transition-all hover:cursor-pointer hover:bg-neutral-800 hover:text-neutral-200"
+              className="my-2 flex w-full items-center justify-center border-2 border-dashed border-neutral-700 py-8 text-neutral-600 transition-all hover:cursor-pointer hover:bg-neutral-800 hover:text-neutral-200"
             >
               {logo?.name ? logo.name : "Logotype 1:1 (optional)"}
             </label>
@@ -295,7 +269,7 @@ const ToolForm = () => {
               className="hidden"
             />
 
-            <div className="mb-6 text-center">
+            <div className="text-center">
               <Button
                 disabled={isSubmitting || isValidating}
                 type="submit"

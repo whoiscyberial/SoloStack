@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import ToolPage from "@/components/tool/ToolPage";
 import ToolsList from "@/components/tool/ToolsList";
 import Container from "@/components/ui/Container";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
@@ -47,19 +46,6 @@ export default function Subcategory() {
     return (
       <Container>
         <LoadingOverlay />
-      </Container>
-    );
-  } else if (
-    typeof subcategory != "string" &&
-    subcategory.length === 2 &&
-    typeof subcategory[1] != undefined
-  ) {
-    // tool page:
-    const slug = subcategory[0]!;
-    const toolId = subcategory[1]!;
-    return (
-      <Container>
-        <ToolPage subcategorySlug={slug} toolId={parseInt(toolId)} />
       </Container>
     );
   } else if (subcategory[0] && subcategory.length === 1) {
